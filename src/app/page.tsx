@@ -92,7 +92,7 @@ export default function Home() {
           </ScrollReveal>
 
           {/* Background Gradient */}
-          <div className="absolute inset-0 bg-gradient-radial from-[#0B001F] via-[#0B001F] to-black opacity-50 -z-10" />
+          <div className="absolute inset-0 bg-gradient-radial from-main-dark via-main-dark to-black opacity-50 -z-10" />
         </section>
 
         <ScrollReveal direction="up">

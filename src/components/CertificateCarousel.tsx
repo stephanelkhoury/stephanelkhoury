@@ -249,18 +249,22 @@ const CertificateCarousel: React.FC<CertificateCarouselProps> = ({ certificates 
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 max-w-4xl w-full mx-4 border border-white/20 shadow-2xl"
+              className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl max-w-4xl w-full mx-4 border border-white/20 shadow-2xl max-h-[90vh] overflow-hidden flex flex-col"
             >
               {/* Close Button */}
-              <button
-                onClick={closePopup}
-                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-colors z-10"
-              >
-                <FontAwesomeIcon icon={faTimes} className="text-white text-sm" />
-              </button>
+              <div className="flex-shrink-0 relative p-4 pb-0">
+                <button
+                  onClick={closePopup}
+                  className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-colors z-10"
+                >
+                  <FontAwesomeIcon icon={faTimes} className="text-white text-sm" />
+                </button>
+              </div>
 
-              {/* Certificate Preview */}
-              <div className="mb-6">
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto modal-scrollbar p-6 pt-2">
+                {/* Certificate Preview */}
+                <div className="mb-6">
                 {/* PDF Preview */}
                 <div className="bg-gray-800 rounded-lg p-4 mb-4">
                   <div className="w-full h-96 rounded-lg bg-gradient-to-br from-white/90 to-gray-100 flex items-center justify-center border-2 border-gray-300 shadow-inner">
@@ -329,6 +333,7 @@ const CertificateCarousel: React.FC<CertificateCarouselProps> = ({ certificates 
                   <FontAwesomeIcon icon={faDownload} className="text-sm" />
                   Download
                 </motion.button>
+              </div>
               </div>
             </motion.div>
           </motion.div>

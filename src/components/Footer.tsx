@@ -18,12 +18,12 @@ const Footer: React.FC = () => {
     setCurrentYear(new Date().getFullYear());
   }, []);
   return (
-    <footer className="bg-[#0B001F] py-12 px-6 md:px-20">
+    <footer className="bg-main-dark py-12 px-6 md:px-20">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           <div className="space-y-4">
             <h3 className="text-xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-[#00E1FF] via-[#C13CFF] to-[#FF8A00] text-transparent bg-clip-text">
+              <span className="gradient-text">
                 Stephan El Khoury
               </span>
             </h3>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AnimatedLink } from './animations';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,7 +21,7 @@ const Navbar: React.FC = () => {
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'backdrop-blur-md bg-[#0B001F]/80' : ''
+        isScrolled ? 'backdrop-blur-md bg-main-dark/80' : ''
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
@@ -32,18 +33,19 @@ const Navbar: React.FC = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="bg-gradient-to-r from-[#00E1FF] via-[#C13CFF] to-[#FF8A00] text-transparent bg-clip-text">
+            <span className="gradient-text">
               Stephan El Khoury
             </span>
           </motion.a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             <AnimatedLink href="#about">About</AnimatedLink>
             <AnimatedLink href="#projects">Projects</AnimatedLink>
             <AnimatedLink href="#experience">Experience</AnimatedLink>
             <AnimatedLink href="#blog">Blog</AnimatedLink>
             <AnimatedLink href="#contact">Contact</AnimatedLink>
+            <ThemeSwitcher />
           </div>
 
           {/* Mobile Menu Button */}
@@ -76,7 +78,7 @@ const Navbar: React.FC = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="absolute top-full left-0 w-full bg-[#0B001F]/95 backdrop-blur-md md:hidden"
+                className="absolute top-full left-0 w-full bg-main-dark/95 backdrop-blur-md md:hidden"
               >
                 <div className="flex flex-col items-center space-y-4 py-6">
                   <AnimatedLink href="#about">About</AnimatedLink>
@@ -84,6 +86,9 @@ const Navbar: React.FC = () => {
                   <AnimatedLink href="#experience">Experience</AnimatedLink>
                   <AnimatedLink href="#blog">Blog</AnimatedLink>
                   <AnimatedLink href="#contact">Contact</AnimatedLink>
+                  <div className="pt-2">
+                    <ThemeSwitcher />
+                  </div>
                 </div>
               </motion.div>
             )}

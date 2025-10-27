@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Sora } from 'next/font/google';
 import { AnimationProvider } from '@/components/animations';
+import ScrollOptimizer from '@/components/ScrollOptimizer';
 import "./globals.css";
 
 // Import the FontAwesome CSS
@@ -28,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${sora.variable}`}>
-      <body className={`${sora.className} bg-[#0B001F] text-[#F5F5F5]`}>
+      <body className={`${sora.className} bg-main-dark text-main-light`}>
         <AnimationProvider>
           {children}
         </AnimationProvider>

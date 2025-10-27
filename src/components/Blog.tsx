@@ -6,78 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { AnimatedSection, ScrollReveal, TextReveal } from './animations';
 import BlogModal from './BlogModal';
-
-interface BlogPost {
-  title: string;
-  excerpt: string;
-  date: string;
-  category: string;
-  image: string;
-  link: string;
-  fullContent?: string;
-  readTime?: string;
-  tags?: string[];
-  author?: string;
-}
-
-const blogPosts: BlogPost[] = [
-  {
-    title: 'The Future of AI in Music Production',
-    excerpt: 'Exploring how artificial intelligence is revolutionizing the way we create and produce music, from automated composition to intelligent mixing.',
-    fullContent: 'Artificial Intelligence is transforming the music industry in unprecedented ways. From AI-powered composition tools to intelligent mixing algorithms, technology is reshaping how we create, produce, and consume music.\n\nMachine learning models can now analyze thousands of songs to understand patterns in melody, harmony, and rhythm. This enables AI systems to generate original compositions that sound remarkably human-like. Tools like OpenAI\'s MuseNet and Google\'s Magenta project are pushing the boundaries of what\'s possible.\n\nIn my work on Harmonix, I\'ve seen firsthand how AI can enhance the creative process without replacing human creativity. The key is finding the right balance between technological assistance and artistic expression.',
-    date: 'May 28, 2025',
-    category: 'AI & Music',
-    image: '/blog/ai-music.jpg',
-    link: '/blog/ai-music-production',
-    readTime: '8 min read',
-    tags: ['AI', 'Music Production', 'Machine Learning', 'Creative Technology'],
-    author: 'Stephan El Khoury'
-  },
-  {
-    title: 'Building Modern Web Applications with Next.js',
-    excerpt: 'A comprehensive guide to creating fast, SEO-friendly web applications using Next.js 13+ with App Router and TypeScript.',
-    fullContent: 'Next.js has revolutionized React development with its powerful features and developer experience. The introduction of the App Router in Next.js 13+ brings server components, improved routing, and better performance optimization.\n\nIn this portfolio project, I\'ve leveraged Next.js to create a fast, SEO-friendly website with server-side rendering, static site generation, and optimized image loading. The App Router provides a more intuitive file-based routing system while maintaining backward compatibility.\n\nKey benefits include automatic code splitting, built-in CSS support, and excellent TypeScript integration. These features make Next.js an ideal choice for modern web applications that need to be both performant and maintainable.',
-    date: 'May 15, 2025',
-    category: 'Web Development',
-    image: '/blog/nextjs.jpg',
-    link: '/blog/nextjs-modern-apps',
-    readTime: '12 min read',
-    tags: ['Next.js', 'React', 'TypeScript', 'Web Development', 'SSR'],
-    author: 'Stephan El Khoury'
-  },
-  {
-    title: 'The Intersection of Music and Code',
-    excerpt: 'How my background in music influences my approach to software development and creates unique problem-solving perspectives.',
-    date: 'May 1, 2025',
-    category: 'Personal',
-    image: '/blog/music-code.jpg',
-    link: '/blog/music-and-code',
-  },
-  {
-    title: 'WordPress vs Custom Development: When to Choose What',
-    excerpt: 'A detailed analysis of when to use WordPress and when to build custom solutions, based on real project experiences.',
-    date: 'April 20, 2025',
-    category: 'Web Development',
-    image: '/blog/wordpress-vs-custom.jpg',
-    link: '/blog/wordpress-vs-custom',
-  },
-  {
-    title: 'Building Scalable E-Learning Platforms',
-    excerpt: 'Lessons learned from developing cryptocurrency education platforms with thousands of users and complex course structures.',
-    date: 'April 10, 2025',
-    category: 'E-Learning',
-    image: '/blog/elearning-platforms.jpg',
-    link: '/blog/scalable-elearning',
-  },
-  {
-    title: 'From Dream Project to Real-World Application',
-    excerpt: 'The journey of transforming Harmonix from a dream project into a production-ready music analysis platform.',
-    date: 'March 25, 2025',
-    category: 'Startup',
-    image: '/blog/dream-to-production.jpg',
-    link: '/blog/dream-to-production',
-  },
-];
+import { BlogPost, blogPosts } from '../data/blogPosts';
 
 const Blog: React.FC = () => {
   const [showAllArticles, setShowAllArticles] = useState(false);
@@ -98,11 +27,11 @@ const Blog: React.FC = () => {
   };
 
   return (
-    <section id="blog" className="py-20 px-6 md:px-20 bg-[#0B001F]/30 relative overflow-hidden">
+    <section id="blog" className="py-20 px-6 md:px-20 bg-main-dark/30 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-32 right-20 w-64 h-64 bg-[#C13CFF]/20 rounded-full blur-3xl floating" />
-        <div className="absolute bottom-40 left-16 w-80 h-80 bg-[#00E1FF]/15 rounded-full blur-3xl floating" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-32 right-20 w-64 h-64 bg-gradient-secondary-rgb/20 rounded-full blur-3xl floating" />
+        <div className="absolute bottom-40 left-16 w-80 h-80 bg-gradient-primary-rgb/15 rounded-full blur-3xl floating" style={{ animationDelay: '3s' }} />
       </div>
       
       <AnimatedSection>
@@ -150,7 +79,7 @@ const Blog: React.FC = () => {
                       whileHover={{ scale: 1.1, rotate: 2 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <span className="px-3 py-1 text-xs bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] text-black rounded-full font-semibold liquid-bg">
+                      <span className="px-3 py-1 text-xs theme-gradient-primary-tertiary text-black rounded-full font-semibold liquid-bg">
                         {post.category}
                       </span>
                     </motion.div>
@@ -163,7 +92,7 @@ const Blog: React.FC = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.5, duration: 0.3 }}
                       >
-                        <span className="px-3 py-1 text-xs bg-gradient-to-r from-[#C13CFF] to-[#FF8A00] text-white rounded-full font-semibold pulse">
+                        <span className="px-3 py-1 text-xs bg-gradient-to-r from-gradient-secondary to-gradient-tertiary text-white rounded-full font-semibold pulse">
                           Featured
                         </span>
                       </motion.div>
@@ -191,12 +120,12 @@ const Blog: React.FC = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.4 }}
                     >
-                      <FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-[#00E1FF]" />
+                      <FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-gradient-primary" />
                       <span className="shimmer">{post.date}</span>
                     </motion.div>
                     
                     <motion.h3 
-                      className={`font-bold mb-3 group-hover:text-[#00E1FF] transition-colors duration-400  ${
+                      className={`font-bold mb-3 group-hover:text-gradient-primary transition-colors duration-400  ${
                         index === 0 && !showAllArticles ? 'text-2xl lg:text-3xl' : 'text-xl'
                       }`}
                       whileHover={{ scale: 1.02 }}
@@ -223,7 +152,7 @@ const Blog: React.FC = () => {
                       transition={{ delay: 0.7, duration: 0.4 }}
                     >
                       <motion.span 
-                        className="text-[#00E1FF] font-semibold group-hover:text-[#FF8A00] transition-colors duration-300 flex items-center gap-2"
+                        className="text-gradient-primary font-semibold group-hover:text-gradient-tertiary transition-colors duration-300 flex items-center gap-2"
                         whileHover={{ x: 5 }}
                         transition={{ duration: 0.2 }}
                       >
@@ -237,7 +166,7 @@ const Blog: React.FC = () => {
                       </motion.span>
                       
                       <motion.div
-                        className="w-8 h-1 bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] rounded-full"
+                        className="w-8 h-1 theme-gradient-primary-tertiary rounded-full"
                         initial={{ width: 0 }}
                         whileInView={{ width: 32 }}
                         transition={{ delay: 0.8, duration: 0.5 }}
@@ -254,7 +183,7 @@ const Blog: React.FC = () => {
           <div className="text-center">
             <motion.button
               onClick={() => setShowAllArticles(!showAllArticles)}
-              className="group px-8 py-4 bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] text-black font-bold rounded-full hover-glow magnetic liquid-bg relative overflow-hidden"
+              className="group px-8 py-4 theme-gradient-primary-tertiary text-black font-bold rounded-full hover-glow magnetic liquid-bg relative overflow-hidden"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}

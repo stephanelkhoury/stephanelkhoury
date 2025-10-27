@@ -506,7 +506,7 @@ const Projects: React.FC = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
                 selectedCategory === category
-                  ? 'bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] text-black'
+                  ? 'bg-main-gradient text-black'
                   : 'bg-white/10 text-white hover:bg-white/20'
               }`}
             >
@@ -519,7 +519,7 @@ const Projects: React.FC = () => {
           {filteredProjects.map((project, index) => (
             <ScrollReveal key={index} delay={index * 0.1} direction="up">
               <motion.div
-                className="group relative bg-gradient-to-br from-[#00E1FF10] to-[#FF8A0010] rounded-xl overflow-hidden border border-white/10 hover-glow glass shimmer cursor-pointer h-full flex flex-col"
+                className="group relative bg-gradient-to-br from-gradient-primary-rgb/10 to-gradient-tertiary-rgb/10 rounded-xl overflow-hidden border border-white/10 hover-glow glass shimmer cursor-pointer h-full flex flex-col"
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
                 onClick={() => handleProjectClick(project)}
@@ -538,7 +538,7 @@ const Projects: React.FC = () => {
                     className="absolute top-4 left-4"
                     whileHover={{ scale: 1.1 }}
                   >
-                    <span className="px-3 py-1 text-xs bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] text-black rounded-full font-medium liquid-bg">
+                    <span className="px-3 py-1 text-xs bg-main-gradient text-black rounded-full font-medium liquid-bg">
                       {project.category}
                     </span>
                   </motion.div>
@@ -557,7 +557,7 @@ const Projects: React.FC = () => {
                 
                 <div className="relative p-6 flex-1 flex flex-col">
                   <motion.h3 
-                    className="text-xl font-semibold mb-2 group-hover:text-[#00E1FF] transition-colors duration-300"
+                    className="text-xl font-semibold mb-2 group-hover:text-gradient-primary transition-colors duration-300"
                     whileHover={{ scale: 1.05 }}
                   >
                     {project.title}
@@ -607,7 +607,7 @@ const Projects: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] text-black rounded-lg text-sm font-medium hover:opacity-90 transition-opacity duration-300"
+                      className="flex items-center gap-2 px-3 py-2 bg-main-gradient text-black rounded-lg text-sm font-medium hover:opacity-90 transition-opacity duration-300"
                     >
                       <FontAwesomeIcon icon={faExternalLinkAlt} />
                       Live Demo

@@ -55,7 +55,7 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({ href, children }) => (
   >
     <span className="relative z-10 text-white">{children}</span>
     <motion.span
-      className="absolute inset-0 bg-gradient-to-r from-[#00E1FF] via-[#C13CFF] to-[#FF8A00] rounded-lg opacity-0"
+      className="absolute inset-0 gradient-primary rounded-lg opacity-0"
       whileHover={{ opacity: 0.2 }}
       transition={{ duration: 0.2 }}
     />

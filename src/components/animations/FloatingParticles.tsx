@@ -23,7 +23,21 @@ const FloatingParticles: React.FC = () => {
   useEffect(() => {
     setIsClient(true);
     
-    const colors = ['#00E1FF', '#C13CFF', '#FF8A00', '#FFFFFF'];
+    // Get theme colors from CSS variables
+    const getThemeColors = () => {
+      if (typeof window !== 'undefined') {
+        const root = getComputedStyle(document.documentElement);
+        return [
+          root.getPropertyValue('--gradient-primary').trim() || '#00E1FF',
+          root.getPropertyValue('--gradient-secondary').trim() || '#C13CFF', 
+          root.getPropertyValue('--gradient-tertiary').trim() || '#FF8A00',
+          '#FFFFFF'
+        ];
+      }
+      return ['#00E1FF', '#C13CFF', '#FF8A00', '#FFFFFF'];
+    };
+    
+    const colors = getThemeColors();
     const particleCount = 50;
 
     const newParticles: Particle[] = Array.from({ length: particleCount }, (_, i) => ({

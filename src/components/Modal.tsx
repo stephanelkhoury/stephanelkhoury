@@ -28,12 +28,22 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
       // Store the currently focused element
       previousActiveElement.current = document.activeElement as HTMLElement;
       
+      // Store current scroll position
+      const scrollY = window.scrollY;
+      
       document.addEventListener('keydown', handleEscape);
-      // Prevent body scroll when modal is open
+      
+      // Enhanced body scroll prevention for all devices
       document.body.style.overflow = 'hidden';
-      // Improve touch scrolling on iOS
       document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
       document.body.style.width = '100%';
+      
+      // Prevent touch scrolling on mobile
+      document.body.style.touchAction = 'none';
+      document.body.style.overscrollBehavior = 'none';
       
       // Focus the modal for better accessibility
       setTimeout(() => {
@@ -43,9 +53,22 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'unset';
+      
+      // Restore body styles and scroll position
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.touchAction = '';
+      document.body.style.overscrollBehavior = '';
+      
+      // Restore scroll position
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
       
       // Restore focus to the previously focused element
       if (previousActiveElement.current) {
@@ -86,17 +109,25 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
               stiffness: 200,
               damping: 20
             }}
-            className="fixed inset-2 sm:inset-4 md:inset-6 lg:inset-8 xl:inset-12 z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 pointer-events-none"
+            className="fixed inset-0 z-50 flex items-start justify-center p-2 sm:p-4 md:p-6 lg:p-8 pointer-events-none"
+            style={{
+              paddingTop: 'max(1rem, env(safe-area-inset-top))',
+              paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+            }}
           >
             <div 
               ref={modalRef}
               tabIndex={-1}
-              className="bg-[#0B001F]/95 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-7xl max-h-full overflow-hidden flex flex-col pointer-events-auto focus:outline-none"
+              className="bg-main-dark/95 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-7xl max-h-full overflow-hidden flex flex-col pointer-events-auto focus:outline-none relative"
+              style={{
+                maxHeight: 'calc(100vh - 2rem)',
+                minHeight: 'min(400px, calc(100vh - 2rem))',
+              }}
             >
               {/* Header - Fixed */}
-              <div className="flex-shrink-0 flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-[#0B001F]/80 backdrop-blur-sm sticky top-0 z-10">
+              <div className="flex-shrink-0 flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-main-dark/80 backdrop-blur-sm sticky top-0 z-10">
                 {title && (
-                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#00E1FF] via-[#C13CFF] to-[#FF8A00] text-transparent bg-clip-text pr-4 truncate">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold gradient-text pr-4 truncate">
                     {title}
                   </h2>
                 )}
@@ -111,9 +142,19 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
                 </motion.button>
               </div>
               
-              {/* Content - Scrollable */}
-              <div className="flex-1 overflow-y-auto modal-scrollbar overscroll-contain scroll-smooth">
-                <div className="p-3 sm:p-4 md:p-6 lg:p-8">
+              {/* Content - Scrollable with Performance Optimizations */}
+              <div 
+                className="flex-1 overflow-y-auto performance-scroll modal-scrollbar overscroll-contain"
+                style={{
+                  scrollBehavior: 'auto', // Better performance than smooth
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarGutter: 'stable',
+                  transform: 'translateZ(0)', // GPU acceleration
+                  willChange: 'scroll-position',
+                  contain: 'layout style paint',
+                }}
+              >
+                <div className="p-3 sm:p-4 md:p-6 lg:p-8 min-h-0">
                   {children}
                 </div>
               </div>

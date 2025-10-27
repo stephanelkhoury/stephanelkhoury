@@ -19,7 +19,8 @@ const MusicNotes: React.FC = () => {
     
     const createNote = () => {
       const note = document.createElement('div');
-      note.className = 'absolute text-2xl text-[#00E1FF] opacity-0';
+      note.className = 'absolute text-2xl opacity-0';
+      note.style.color = getComputedStyle(document.documentElement).getPropertyValue('--gradient-primary') || '#00E1FF';
       note.textContent = notes[Math.floor(Math.random() * notes.length)];
       note.style.left = `${Math.random() * 100}%`;
       container.appendChild(note);

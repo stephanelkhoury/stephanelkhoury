@@ -297,7 +297,7 @@ const ContactInfo: React.FC<{
       {href ? (
         <motion.a
           href={href}
-          className="text-white font-medium hover:text-[#00E1FF] transition-colors duration-300"
+          className="text-white font-medium hover-text-gradient-primary transition-colors duration-300"
           whileHover={{ scale: 1.02 }}
         >
           {value}

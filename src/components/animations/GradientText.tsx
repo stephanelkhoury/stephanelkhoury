@@ -19,7 +19,7 @@ const GradientText: React.FC<GradientTextProps> = ({ text, className = '', delay
         delay,
         ease: [0.6, -0.05, 0.01, 0.99]
       }}
-      className={`bg-gradient-to-r from-[#00E1FF] via-[#C13CFF] to-[#FF8A00] text-transparent bg-clip-text animate-gradientFlow ${className}`}
+      className={`gradient-text animate-gradientFlow ${className}`}
     >
       {text}
     </motion.span>

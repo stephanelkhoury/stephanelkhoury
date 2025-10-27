@@ -102,10 +102,10 @@ const Experience: React.FC = () => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   
   return (
-    <section id="experience" className="py-20 px-6 md:px-20 bg-[#0B001F]/30 relative overflow-hidden">
+    <section id="experience" className="py-20 px-6 md:px-20 bg-main-dark/30 relative overflow-hidden">
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#00E1FF]/20 rounded-full blur-3xl floating" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#FF8A00]/15 rounded-full blur-3xl floating" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-primary-rgb/20 rounded-full blur-3xl floating" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-tertiary-rgb/15 rounded-full blur-3xl floating" style={{ animationDelay: '2s' }} />
       </div>
       
       <AnimatedSection>
@@ -121,7 +121,7 @@ const Experience: React.FC = () => {
         
         <div ref={containerRef} className="relative">
           {/* Timeline Line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[#00E1FF] via-[#C13CFF] to-[#FF8A00] transform md:-translate-x-px" />
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-main-gradient transform md:-translate-x-px" />
           
           <div className="space-y-16">
             {experiences.map((exp, index) => (
@@ -135,7 +135,7 @@ const Experience: React.FC = () => {
                 >
                   {/* Timeline Dot */}
                   <motion.div 
-                    className="absolute left-4 md:left-1/2 w-4 h-4 bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] rounded-full transform -translate-x-2 md:-translate-x-2 z-10 pulse"
+                    className="absolute left-4 md:left-1/2 w-4 h-4 bg-main-gradient rounded-full transform -translate-x-2 md:-translate-x-2 z-10 pulse"
                     whileHover={{ scale: 1.5 }}
                     transition={{ duration: 0.3 }}
                   />
@@ -160,8 +160,8 @@ const Experience: React.FC = () => {
                         {exp.title}
                       </motion.h3>
                       <motion.p 
-                        className="text-[#00E1FF] font-semibold mb-1 text-lg"
-                        whileHover={{ color: '#FF8A00' }}
+                        className="text-gradient-primary font-semibold mb-1 text-lg"
+                        whileHover={{ color: 'var(--gradient-tertiary)' }}
                         transition={{ duration: 0.3 }}
                       >
                         {exp.company}
@@ -179,7 +179,7 @@ const Experience: React.FC = () => {
                         {exp.description.map((item, i) => (
                           <motion.li 
                             key={i} 
-                            className="relative pl-4 border-l-2 border-[#00E1FF]/30 hover:border-[#00E1FF] transition-colors duration-300"
+                            className="relative pl-4 border-l-2 border-gradient-primary-rgb/30 hover:border-gradient-primary transition-colors duration-300"
                             initial={{ opacity: 0, x: index % 2 === 0 ? 20 : -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.1 }}
@@ -196,7 +196,7 @@ const Experience: React.FC = () => {
                         {exp.technologies.map((tech, i) => (
                           <motion.span
                             key={i}
-                            className="px-3 py-1 text-sm bg-gradient-to-r from-[#00E1FF]/20 to-[#FF8A00]/20 border border-white/10 rounded-full hover-lift magnetic liquid-bg"
+                            className="px-3 py-1 text-sm bg-gradient-to-r from-gradient-primary-rgb/20 to-gradient-tertiary-rgb/20 border border-white/10 rounded-full hover-lift magnetic liquid-bg"
                             whileHover={{ 
                               scale: 1.1, 
                               backgroundColor: 'rgba(0, 225, 255, 0.3)',
@@ -237,7 +237,7 @@ const Experience: React.FC = () => {
             </motion.p>
             <motion.a
               href="#contact"
-              className="inline-block px-8 py-3 bg-gradient-to-r from-[#00E1FF] to-[#FF8A00] text-black font-semibold rounded-full hover-glow magnetic liquid-bg"
+              className="inline-block px-8 py-3 bg-main-gradient text-black font-semibold rounded-full hover-glow magnetic liquid-bg"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >

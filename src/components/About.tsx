@@ -229,11 +229,11 @@ const About: React.FC = () => {
 
   return (
     <>
-      <section id="about" className="py-20 px-6 md:px-20 bg-[#0B001F]/30 relative overflow-hidden">
+      <section id="about" className="py-20 px-6 md:px-20 bg-main-dark/30 relative overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-[#00E1FF] to-[#C13CFF] rounded-full blur-3xl floating-animation" />
-          <div className="absolute bottom-1/3 right-1/4 w-24 h-24 bg-gradient-to-r from-[#C13CFF] to-[#FF8A00] rounded-full blur-2xl floating-animation" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 theme-gradient-primary-secondary rounded-full blur-3xl floating-animation" />
+          <div className="absolute bottom-1/3 right-1/4 w-24 h-24 theme-gradient-secondary-tertiary rounded-full blur-2xl floating-animation" style={{ animationDelay: '2s' }} />
         </div>
 
         <AnimatedSection>
@@ -262,7 +262,7 @@ const About: React.FC = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.6 }}
                     >
-                      <h4 className="font-semibold text-[#00E1FF]">{edu.school}</h4>
+                      <h4 className="font-semibold text-gradient-primary">{edu.school}</h4>
                       <p className="text-gray-300">{edu.degree}</p>
                       <p className="text-gray-400 text-sm">{edu.period}</p>
                     </motion.div>
@@ -280,7 +280,7 @@ const About: React.FC = () => {
                       transition={{ delay: index * 0.1, duration: 0.5 }}
                       whileHover={{ y: -5 }}
                     >
-                      <h4 className="font-semibold text-[#00E1FF]">{lang.name}</h4>
+                      <h4 className="font-semibold text-gradient-primary">{lang.name}</h4>
                       <p className="text-gray-300">{lang.level}</p>
                     </motion.div>
                   ))}
@@ -317,7 +317,7 @@ const About: React.FC = () => {
                       transition={{ delay: index * 0.2, duration: 0.6 }}
                       whileHover={{ scale: 1.02 }}
                     >
-                      <h4 className="font-semibold text-[#00E1FF] mb-2">{cert.type}</h4>
+                      <h4 className="font-semibold text-gradient-primary mb-2">{cert.type}</h4>
                       <ul className="list-disc list-inside text-gray-300 space-y-1">
                         {cert.items.map((item, i) => (
                           <li key={i}>{item}</li>
@@ -333,11 +333,11 @@ const About: React.FC = () => {
       </section>
 
       {/* Certificate Carousel Section */}
-      <section className="py-16 px-6 md:px-20 bg-[#0B001F]/20 relative overflow-hidden">
+      <section className="py-16 px-6 md:px-20 bg-main-dark/20 relative overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/3 right-1/4 w-40 h-40 bg-gradient-to-r from-[#C13CFF] to-[#00E1FF] rounded-full blur-3xl floating-animation" />
-          <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-gradient-to-r from-[#FF8A00] to-[#C13CFF] rounded-full blur-2xl floating-animation" style={{ animationDelay: '3s' }} />
+          <div className="absolute top-1/3 right-1/4 w-40 h-40 theme-gradient-secondary-primary rounded-full blur-3xl floating-animation" />
+          <div className="absolute bottom-1/4 left-1/3 w-28 h-28 theme-gradient-tertiary-secondary rounded-full blur-2xl floating-animation" style={{ animationDelay: '3s' }} />
         </div>
 
         <AnimatedSection>
