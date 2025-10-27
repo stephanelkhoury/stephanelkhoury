@@ -2,9 +2,11 @@
   "version": 1,
   "config": {
     "env": {},
-    "webpack": null,
     "eslint": {
-      "ignoreDuringBuilds": false
+      "ignoreDuringBuilds": false,
+      "dirs": [
+        "src"
+      ]
     },
     "typescript": {
       "ignoreBuildErrors": false,

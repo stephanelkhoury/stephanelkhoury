@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -12,9 +12,7 @@ import {
   faGripVertical,
   faList,
   faTimes,
-  faChevronDown,
-  faSort,
-  faEye
+  faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -62,7 +60,7 @@ const BlogListPage: React.FC = () => {
     });
   };
 
-  const filterPosts = (category: string, search: string) => {
+  const filterPosts = useCallback((category: string, search: string) => {
     let filtered = blogPosts;
 
     if (category !== 'All') {
@@ -79,11 +77,11 @@ const BlogListPage: React.FC = () => {
 
     const sorted = sortPosts(filtered, sortBy);
     setFilteredPosts(sorted);
-  };
+  }, [sortBy]);
 
   useEffect(() => {
     filterPosts(selectedCategory, searchTerm);
-  }, [sortBy]);
+  }, [filterPosts, selectedCategory, searchTerm]);
 
   if (isLoading) {
     return (

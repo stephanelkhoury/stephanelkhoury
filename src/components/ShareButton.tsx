@@ -27,7 +27,7 @@ interface ShareButtonProps {
 
 interface ShareOption {
   name: string;
-  icon: any;
+  icon: typeof import('@fortawesome/free-solid-svg-icons').faShare;
   color: string;
   action: (title: string, text: string, url: string) => void;
 }
@@ -62,7 +62,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
         try {
           await navigator.clipboard.writeText(url);
           showSuccess();
-        } catch (error) {
+        } catch {
           fallbackCopy(url);
         }
       }
@@ -146,7 +146,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       } else {
         setShowShareMenu(true);
       }
-    } catch (error) {
+    } catch {
       setShowShareMenu(true);
     }
   };

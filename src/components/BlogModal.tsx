@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faTag, faArrowRight, faClock, faShare, faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -39,7 +39,7 @@ const BlogModal: React.FC<BlogModalProps> = ({ post, isOpen, onClose }) => {
         setIsShared(true);
         setTimeout(() => setIsShared(false), 2000);
       }
-    } catch (error) {
+    } catch {
       const textArea = document.createElement('textarea');
       textArea.value = `${window.location.origin}/blog/${post.slug}`;
       document.body.appendChild(textArea);

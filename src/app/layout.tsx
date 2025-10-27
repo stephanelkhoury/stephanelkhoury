@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Sora } from 'next/font/google';
 import { AnimationProvider } from '@/components/animations';
-import ScrollOptimizer from '@/components/ScrollOptimizer';
 import "./globals.css";
 
 // Import the FontAwesome CSS

@@ -10,12 +10,11 @@ import {
   faTag, 
   faUser, 
   faArrowLeft,
-  faBookmark,
-  faLink
+  faBookmark
 } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BlogPost, getBlogPostBySlug } from '../../../data/blogPosts';
+import { getBlogPostBySlug } from '../../../data/blogPosts';
 import ShareButton from '@/components/ShareButton';
 
 interface BlogPageProps {
@@ -27,45 +26,11 @@ interface BlogPageProps {
 const BlogPage: React.FC<BlogPageProps> = ({ params }) => {
   const { slug } = use(params);
   const post = getBlogPostBySlug(slug);
-  const [isShared, setIsShared] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
   if (!post) {
     notFound();
   }
-
-  // Share functionality
-  const handleShare = async () => {
-    const shareData = {
-      title: post.title,
-      text: post.excerpt,
-      url: window.location.href,
-    };
-
-    try {
-      // Check if native sharing is supported (mobile devices)
-      if (navigator.share) {
-        await navigator.share(shareData);
-        setIsShared(true);
-        setTimeout(() => setIsShared(false), 2000);
-      } else {
-        // Fallback: Copy to clipboard
-        await navigator.clipboard.writeText(window.location.href);
-        setIsShared(true);
-        setTimeout(() => setIsShared(false), 2000);
-      }
-    } catch (error) {
-      // Fallback: Manual copy
-      const textArea = document.createElement('textarea');
-      textArea.value = window.location.href;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setIsShared(true);
-      setTimeout(() => setIsShared(false), 2000);
-    }
-  };
 
   // Save functionality (localStorage)
   const handleSave = () => {

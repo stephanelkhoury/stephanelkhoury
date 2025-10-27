@@ -28,7 +28,7 @@ export const useScrollPerformance = () => {
       }, 150); // Debounce scroll end detection
     };
 
-    const handleWheel = (e: WheelEvent) => {
+    const handleWheel = () => {
       handleScrollStart();
     };
 
