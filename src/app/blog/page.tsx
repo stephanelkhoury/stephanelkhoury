@@ -7,7 +7,6 @@ import {
   faCalendarAlt, 
   faArrowRight, 
   faClock, 
-  faTag,
   faSearch,
   faFilter,
   faGripVertical,
