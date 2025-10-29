@@ -6,7 +6,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import gsap from 'gsap';
 import MusicNotes from './MusicNotes';
 import FloatingParticles from './FloatingParticles';
-import useSmoothScroll from './useSmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,7 +78,8 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ onClick, children }) =>
 );
 
 const AnimationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  useSmoothScroll();
+  // Temporarily disabled smooth scroll to fix scrolling issue
+  // useSmoothScroll();
 
   return (
     <>

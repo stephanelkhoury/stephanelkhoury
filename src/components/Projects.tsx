@@ -153,6 +153,33 @@ const projects: Project[] = [
     ]
   },
   {
+    title: 'Harmonix Transposer – Interactive Chord Transposer',
+    description: 'Advanced chord transposition tool with authentication, file import, and real-time chord analysis for musicians and composers.',
+    fullDescription: 'A comprehensive chord transposition web application that allows musicians to import songbooks, parse multiple songs, and transpose chords in real-time. Features secure authentication, multi-format file import, and interactive chord visualization with note detection.',
+    image: '/projects/chord-dictionary.jpg',
+    technologies: ['JavaScript', 'HTML5', 'CSS3', 'File API', 'Crypto API', 'Authentication'],
+    live: '/projects/harmonix-transposer.html',
+    category: 'Music Tools',
+    date: 'October 2025',
+    features: [
+      'Real-time chord transposition (-12 to +12 semitones)',
+      'Multi-format file import (TXT, PDF, DOCX)',
+      'Secure authentication with SHA-256 hashing',
+      'Interactive chord popup with note visualization',
+      'Support for both letter notation (C, D, E) and solfège (Do, Re, Mi)',
+      'Song parsing with numbered headers',
+      'Download transposed songs as text files',
+      'Light/dark theme toggle',
+      'Mobile-responsive design with touch support'
+    ],
+    challenges: [
+      'Implementing robust chord recognition regex patterns',
+      'Creating secure client-side authentication',
+      'Building responsive UI that works on all devices',
+      'Handling multiple notation systems and chord qualities'
+    ]
+  },
+  {
     title: 'Sancta Maria Choir Website',
     description: 'Complete CMS with ACF Pro, events management, PDF resources, admin dashboard, and media gallery. Full-featured website for professional choir with advanced content management.',
     image: '/projects/sancta-maria.jpg',
@@ -199,13 +226,6 @@ const projects: Project[] = [
     technologies: ['WordPress', 'Event Management', 'Visual Storytelling', 'Booking System'],
     live: 'https://richysentertainment.com',
     category: 'WordPress',
-  },
-  {
-    title: 'Hi-YU Lebanon Web Strategy',
-    description: 'Complete website rebuild strategy and development proposal. Full-stack approach with modern design principles and performance optimization.',
-    image: '/projects/hi-yu-lebanon.jpg',
-    technologies: ['Strategy', 'Full-Stack Development', 'Performance Optimization', 'Modern Design'],
-    category: 'Strategy',
   },
   {
     title: 'Saudi Dates Documentation',

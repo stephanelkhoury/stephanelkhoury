@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Harmonix.Ai – Transposer by Stephan El Khoury</title>
+<style>
+  :root{
+    --bg:#0f1220; --surface:#171a2c; --ink:#e7e9ff; --muted:#9aa3c7; --accent:#7aa2ff; --tab:#232743; --chip:#2b315c; --border:#2a2f57;
+  }
+  [data-theme="light"]{
+    --bg:#fbfbff; --surface:#ffffff; --ink:#101225; --muted:#5f6b8c; --accent:#3a63ff; --tab:#ebeeff; --chip:#e8ebff; --border:#dae0ff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans"; background:var(--bg); color:var(--ink);}  
+  a{color:var(--accent); text-decoration:none}
+  header{padding:14px 16px; border-bottom:1px solid var(--border); background:linear-gradient(180deg,rgba(0,0,0,.06),transparent); position:sticky; top:0; z-index:10}
+  .bar{display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+  .brand{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  h1{margin:0; font-size:16px}
+  .domain{font-size:12px; color:var(--muted)}
+  .right{display:flex; gap:8px; align-items:center}
+  .toggle{border:1px solid var(--border); background:var(--surface); padding:8px 10px; border-radius:10px; cursor:pointer}
+
+  .wrap{max-width:1100px; margin:18px auto 32px; padding:0 16px}
+  .grid{display:grid; grid-template-columns:1fr; gap:16px}
+  @media(min-width:980px){.grid{grid-template-columns:minmax(360px,480px) 1fr}}
+
+  textarea{width:100%; min-height:320px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:14px; padding:12px 14px; line-height:1.35; resize:vertical; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+  .controls{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:8px}
+  .btn{background:var(--accent); color:#fff; border:0; padding:10px 14px; border-radius:12px; font-weight:600; cursor:pointer}
+  .btn.secondary{background:#2b315c; color:var(--ink)}
+  .btn.ghost{background:transparent; border:1px solid var(--border); color:var(--ink)}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
+  .hint{color:var(--muted); font-size:12px}
+  select{border:1px solid var(--border); background:var(--surface); color:var(--ink); padding:10px 12px; border-radius:10px}
+
+  /* Tabs + Mobile dropdown */
+  .headerRow{display:flex; align-items:center; gap:8px; justify-content:space-between; margin-bottom:8px}
+  #songSelect{display:none; width:100%}
+  .tabs{display:flex; gap:6px; flex-wrap:nowrap; overflow:auto; scrollbar-width:thin; background:var(--surface); padding:8px; border-radius:14px; border:1px solid var(--border); position:sticky; top:66px; z-index:4}
+  .tab{padding:8px 12px; border-radius:10px; background:var(--tab); color:var(--ink); cursor:pointer; user-select:none; border:1px solid var(--border); font-size:13px; white-space:nowrap}
+  .tab.active{background:var(--accent); color:#fff; border-color:var(--accent)}
+  @media(max-width:1024px){ .tabs{display:none} #songSelect{display:block} }
+
+  .panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; min-height:300px}
+  .title{margin:0 0 8px; font-size:16px}
+  .transpose{display:flex; align-items:center; gap:10px; margin:6px 0 12px; flex-wrap:wrap}
+  input[type="range"]{width:min(280px,60vw)}
+  .mono{white-space:pre-wrap; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; line-height:1.4}
+  .badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; background:#273069; color:#cbd4ff}
+
+  /* Popup for chord notes */
+  .popup{position:fixed; inset:auto auto 16px 16px; max-width:92vw; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:12px; padding:12px 14px; z-index:20; display:none}
+  .popup h3{margin:0 0 6px; font-size:14px}
+  .popup .notes{display:flex; flex-wrap:wrap; gap:8px}
+  .note{background:var(--tab); padding:4px 8px; border-radius:10px; font-weight:700}
+  .chord{background:rgba(122,162,255,.18); border-bottom:1px dashed var(--accent); cursor:pointer; padding:0 2px; border-radius:4px}
+
+  /* Auth modal */
+  .modal{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:100}
+  .sheet{background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:16px; padding:18px; width:min(520px,92vw)}
+  .sheet h2{margin:0 0 8px; font-size:18px}
+  .row{display:flex; gap:10px; align-items:center; margin:10px 0}
+  .row input{flex:1; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--ink)}
+  .err{color:#ff8d8d; font-size:12px; min-height:1em}
+</style>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <div class="brand">
+        <h1>Harmonix.Ai — Transposer by Stephan El Khoury</h1>
+        <span class="domain"><a href="https://stephanelkhoury.com" target="_blank" rel="noopener">stephanelkhoury.com</a></span>
+      </div>
+      <div class="right">
+        <button id="themeBtn" class="toggle" title="Toggle light/dark">🌙/☀️</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <section>
+        <div class="controls">
+          <select id="importKind" aria-label="Import kind">
+            <option value="paste">Paste manually</option>
+            <option value="txt">Import TXT (.txt)</option>
+            <option value="docx">Import Word (.docx)</option>
+            <option value="pdf">Import PDF (.pdf)</option>
+          </select>
+          <button class="btn" id="importBtn">Import</button>
+          <button class="btn ghost" id="parseBtn">Parse songs</button>
+          <span class="hint">Each song should start with a numbered header, e.g. "1. Title …".</span>
+        </div>
+        <textarea id="raw" placeholder="Paste your full songbook text here… (or use Import)"></textarea>
+        <input type="file" id="fileInput" accept=".txt,.pdf,.docx" hidden />
+      </section>
+
+      <section>
+        <div class="headerRow">
+          <select id="songSelect" aria-label="Song selector (mobile/iPad)"></select>
+        </div>
+        <div id="tabs" class="tabs" aria-label="Songs"></div>
+        <div class="panel">
+          <h2 class="title" id="songTitle">No song selected</h2>
+          <div class="transpose">
+            <span class="badge">Transpose</span>
+            <button class="btn secondary" id="downBtn" title="-1 semitone">−1</button>
+            <input id="shift" type="range" min="-12" max="12" value="0" step="1" />
+            <button class="btn secondary" id="upBtn" title="+1 semitone">+1</button>
+            <button class="btn ghost" id="resetBtn" title="Reset">Reset</button>
+            <span class="hint" id="shiftVal">0</span>
+            <button class="btn ghost" id="downloadBtn" title="Download this tab as text">Download</button>
+          </div>
+          <div id="content" class="mono" aria-live="polite">Paste and parse to see songs here.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Chord keys popup -->
+  <div class="popup" id="popup" role="dialog" aria-modal="true" aria-live="polite">
+    <h3 id="popupTitle">Chord</h3>
+    <div class="notes" id="popupNotes"></div>
+  </div>
+
+  <!-- Password modal -->
+  <div class="modal" id="authModal">
+    <div class="sheet">
+      <h2>Secure Access</h2>
+      <div class="row"><input id="email" type="email" placeholder="Email" autocomplete="username" /></div>
+      <div class="row"><input id="password" type="password" placeholder="Password" autocomplete="current-password" /></div>
+      <div class="err" id="authErr"></div>
+      <div class="row" style="justify-content:space-between">
+        <button class="btn ghost" id="cancelAuth">Cancel</button>
+        <button class="btn" id="loginBtn">Enter</button>
+      </div>
+      <p class="hint">Managed by Stephan • Data source can be a JSON at <code>https://stephanelkhoury.com/harmonix-users.json</code>.</p>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ======= THEME =======
+  const themeBtn = document.getElementById('themeBtn');
+  const savedTheme = localStorage.getItem('harmonix_theme');
+  if(savedTheme){ document.documentElement.setAttribute('data-theme', savedTheme); }
+  themeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', cur);
+    localStorage.setItem('harmonix_theme', cur);
+  });
+
+  // ======= IMPORT =======
+  const rawEl = document.getElementById('raw');
+  const importBtn = document.getElementById('importBtn');
+  const importKind = document.getElementById('importKind');
+  const fileInput = document.getElementById('fileInput');
+  importBtn.addEventListener('click', () => {
+    const kind = importKind.value;
+    if(kind === 'paste'){ rawEl.focus(); return; }
+    fileInput.accept = kind==='txt'?'.txt':(kind==='pdf'?'.pdf':'.docx');
+    fileInput.click();
+  });
+  fileInput.addEventListener('change', async () => {
+    const f = fileInput.files && fileInput.files[0];
+    if(!f) return;
+    const ext = (f.name.split('.').pop()||'').toLowerCase();
+    if(ext === 'txt'){
+      const txt = await f.text(); rawEl.value = txt; return;
+    }
+    if(ext === 'pdf' || ext === 'docx'){
+      alert('For PDF/DOCX in this single-file app, please copy the text or save as .txt and re-import.');
+      try{ const maybeText = await f.text(); if(maybeText && maybeText.length>0){ rawEl.value = maybeText; } }catch(e){}
+      return;
+    }
+    alert('Unsupported file type.');
+  });
+
+  // ======= PARSER & STATE =======
+  const tabsEl = document.getElementById('tabs');
+  const songSelect = document.getElementById('songSelect');
+  const titleEl = document.getElementById('songTitle');
+  const contentEl = document.getElementById('content');
+  const parseBtn = document.getElementById('parseBtn');
+  const shiftEl = document.getElementById('shift');
+  const shiftValEl = document.getElementById('shiftVal');
+  const downBtn = document.getElementById('downBtn');
+  const upBtn = document.getElementById('upBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  let songs = []; // {title, body}
+  let current = -1;
+  let currentShift = 0;
+
+  function parseSongs(text){
+    const lines = text.split(/\r?\n/);
+    const blocks = [];
+    let cur = null;
+    const headerRe = /^(\d+)\.\s*(.+?)\s*$/;
+    for(const line of lines){
+      const m = line.match(headerRe);
+      if(m){ if(cur) blocks.push(cur); cur = { title: m[2].trim(), body: '' }; }
+      else if(cur){ cur.body += (cur.body ? '\n' : '') + line; }
+    }
+    if(cur) blocks.push(cur);
+    return blocks;
+  }
+
+  const LETTERS_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  const LETTERS_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+  const SOLF_SHARP = ['Do','Do#','Re','Re#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
+  const SOLF_FLAT  = ['Do','Reb','Re','Mib','Mi','Fa','Solb','Sol','Lab','La','Sib','Si'];
+
+  function normalizeCaseLike(sample, out){
+    if(sample[0] && sample[0] === sample[0].toLowerCase()) return out.toLowerCase();
+    return out;
+  }
+  function noteToIndex(root){
+    const r = root.replace(/\s+/g,'').replace(/♯/g,'#').replace(/♭/g,'b');
+    let i = SOLF_SHARP.findIndex(n => n.toLowerCase() === r.toLowerCase());
+    if(i !== -1) return {idx:i, system:'solf', preferFlat:false};
+    i = SOLF_FLAT.findIndex(n => n.toLowerCase() === r.toLowerCase());
+    if(i !== -1) return {idx:i, system:'solf', preferFlat:true};
+    i = LETTERS_SHARP.findIndex(n => n.toLowerCase() === r.toLowerCase());
+    if(i !== -1) return {idx:i, system:'letter', preferFlat:false};
+    i = LETTERS_FLAT.findIndex(n => n.toLowerCase() === r.toLowerCase());
+    if(i !== -1) return {idx:i, system:'letter', preferFlat:true};
+    return null;
+  }
+  function indexToNote(idx, system, preferFlat, sample){
+    const arr = system === 'solf' ? (preferFlat ? SOLF_FLAT : SOLF_SHARP) : (preferFlat ? LETTERS_FLAT : LETTERS_SHARP);
+    const note = arr[(idx+12)%12];
+    return normalizeCaseLike(sample, note);
+  }
+  function transposeRoot(root, shift){
+    const info = noteToIndex(root);
+    if(!info) return root;
+    const {idx, system, preferFlat} = info;
+    return indexToNote(idx + shift, system, preferFlat, root);
+  }
+
+  const chordRe = /(Do|Re|Mi|Fa|Sol|La|Si|[A-G])([#b]?)(m?)/g;
+  function isLetter(ch){ return /[A-Za-zÀ-ÿ]/.test(ch); }
+  function startsWithQuality(rest){
+    return /^(m(?!aj)|maj|dim7|dim|aug|sus2|sus4|sus|add9|\+|7)(?![A-Za-zÀ-ÿ])/.test(rest);
+  }
+  function safeReplaceChords(str, mapper){
+    return str.replace(chordRe, (match, root, acc, minor, offset, s) => {
+      const before = s[offset - 1] || '';
+      const after  = s[offset + match.length] || '';
+      const rest   = s.slice(offset + (root+acc).length);
+      if(root === 'E' && (after === 'n' || after === 'N')) return match; // keep "En"
+      if(isLetter(before)) return match;                                  // avoid inside words
+      if(isLetter(after) && !startsWithQuality(rest)) return match;       // avoid Refrain/Couplet
+      return mapper(match, root+acc+(minor||''), root, acc, minor, offset, s);
+    });
+  }
+  function transposeText(body, shift){
+    if(shift === 0) return body;
+    let temp = body.replace(/\b(Do|Re|Mi|Fa|Sol|La|Si|[A-G])\s+m(?![A-Za-zÀ-ÿ])/g, (m, r)=> r + 'm');
+    temp = safeReplaceChords(temp, (_m, full, root, acc, minor) => {
+      const trans = transposeRoot(root + (acc||''), shift);
+      return trans + (minor || '');
+    });
+    return temp;
+  }
+  function escapeHtml(x){ return x.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  function renderWithChordSpans(text){
+    let out = '', last = 0;
+    text.replace(chordRe, (match, root, acc, minor, idx, src) => {
+      const before = src[idx - 1] || '';
+      const after  = src[idx + match.length] || '';
+      const rest   = src.slice(idx + (root+(acc||'')).length);
+      if(root === 'E' && (after === 'n' || after === 'N')) return match;
+      if(isLetter(before)) return match;
+      if(isLetter(after) && !startsWithQuality(rest)) return match;
+      out += escapeHtml(src.slice(last, idx));
+      const chordText = root + (acc||'') + (minor||'');
+      out += `<span class="chord" data-chord="${chordText}">${escapeHtml(chordText)}</span>`;
+      last = idx + match.length;
+      return match;
+    });
+    out += escapeHtml(text.slice(last));
+    return out;
+  }
+
+  function renderTabs(){
+    tabsEl.innerHTML=''; songSelect.innerHTML='';
+    songs.forEach((s, i) => {
+      const b = document.createElement('button');
+      b.className = 'tab' + (i===current ? ' active' : '');
+      b.textContent = `${i+1}. ${s.title}`;
+      b.addEventListener('click', () => selectSong(i));
+      tabsEl.appendChild(b);
+      const opt = new Option(`${i+1}. ${s.title}`, String(i));
+      songSelect.add(opt);
+    });
+    songSelect.value = String(current);
+  }
+  function selectSong(i){
+    current = i; currentShift = 0; shiftEl.value = 0; shiftValEl.textContent = '0';
+    renderTabs();
+    const s = songs[i];
+    titleEl.textContent = s.title;
+    contentEl.innerHTML = renderWithChordSpans(s.body.trim() ? s.body.trim() : '(empty)');
+  }
+  function refreshTransposeView(){
+    if(current < 0) return;
+    const src = songs[current].body;
+    const transposed = transposeText(src, currentShift);
+    contentEl.innerHTML = renderWithChordSpans(transposed);
+  }
+
+  document.getElementById('parseBtn').addEventListener('click', () => {
+    const text = rawEl.value.trim();
+    if(!text){ alert('Paste or import your text first.'); return; }
+    songs = parseSongs(text);
+    if(!songs.length){ alert('No songs found. Each song should start with a line like "1. Title …"'); return; }
+    renderTabs(); selectSong(0);
+  });
+  songSelect.addEventListener('change', (e)=> selectSong(parseInt(e.target.value,10)) );
+
+  document.getElementById('downBtn').addEventListener('click', () => { currentShift=Math.max(-12, currentShift-1); shiftEl.value=currentShift; shiftValEl.textContent=String(currentShift); refreshTransposeView(); });
+  document.getElementById('upBtn').addEventListener('click',   () => { currentShift=Math.min(12, currentShift+1);  shiftEl.value=currentShift; shiftValEl.textContent=String(currentShift); refreshTransposeView(); });
+  document.getElementById('resetBtn').addEventListener('click', () => { if(current<0) return; currentShift=0; shiftEl.value=0; shiftValEl.textContent='0'; refreshTransposeView(); });
+  shiftEl.addEventListener('input', (e) => { currentShift=parseInt(e.target.value,10)||0; shiftValEl.textContent=String(currentShift); refreshTransposeView(); });
+  downloadBtn.addEventListener('click', () => {
+    if(current<0) return;
+    const name = (songs[current].title || 'song').replace(/[^\w\-]+/g,'_');
+    const txt = transposeText(songs[current].body, currentShift);
+    const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), {href:url, download:`${name}_transposed.txt`});
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  // ======= CHORD POPUP (keys) =======
+  const popup = document.getElementById('popup');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupNotes = document.getElementById('popupNotes');
+  function showPopup(title, notes){
+    popupTitle.textContent = title; popupNotes.innerHTML = '';
+    notes.forEach(n => { const b = document.createElement('span'); b.className = 'note'; b.textContent = n; popupNotes.appendChild(b); });
+    popup.style.display = 'block';
+  }
+  function hidePopup(){ popup.style.display = 'none'; }
+  document.addEventListener('keydown', e => { if(e.key==='Escape') hidePopup(); });
+  document.addEventListener('click', e => { if(e.target.closest('.popup') || e.target.classList.contains('chord')) return; hidePopup(); });
+
+  function parseChordQuality(text){
+    const q = text;
+    if(/maj7/i.test(q)) return {name:'maj7', iv:[0,4,7,11]};
+    if(/m7b5/i.test(q)) return {name:'m7b5', iv:[0,3,6,10]};
+    if(/m7/i.test(q))   return {name:'m7',   iv:[0,3,7,10]};
+    if(/dim7/i.test(q)) return {name:'dim7', iv:[0,3,6,9]};
+    if(/dim/i.test(q))  return {name:'dim',  iv:[0,3,6]};
+    if(/aug/i.test(q) || /\+/i.test(q))  return {name:'aug',  iv:[0,4,8]};
+    if(/sus2/i.test(q)) return {name:'sus2', iv:[0,2,7]};
+    if(/sus4/i.test(q) || /sus/i.test(q)) return {name:'sus4', iv:[0,5,7]};
+    if(/add9/i.test(q)) return {name:'add9', iv:[0,4,7,14]};
+    if(/\bm(?!aj|in)/i.test(q)) return {name:'m', iv:[0,3,7]};
+    if(/7/.test(q)) return {name:'7', iv:[0,4,7,10]};
+    return {name:'', iv:[0,4,7]};
+  }
+  function chordNotesFor(token){
+    const slashIdx = token.indexOf('/');
+    const main = slashIdx >= 0 ? token.slice(0, slashIdx) : token;
+    const m = main.match(/^(Do|Re|Mi|Fa|Sol|La|Si|[A-G])([#b]?)(.*)$/i);
+    if(!m) return null;
+    const root = m[1] + (m[2]||'');
+    const qualityTxt = m[3] || '';
+    const info = noteToIndex(root); if(!info) return null;
+    const {idx, system, preferFlat} = info;
+    const qual = parseChordQuality(qualityTxt);
+    const pts = qual.iv.map(semi => indexToNote(idx + semi, system, preferFlat, root));
+    return {name: root + qual.name, notes: pts};
+  }
+  contentEl.addEventListener('click', e => {
+    const t = e.target; if(!t.classList.contains('chord')) return;
+    const token = t.getAttribute('data-chord');
+    const res = chordNotesFor(token); if(!res) return;
+    showPopup(res.name + ' — keys', res.notes);
+  });
+
+  // ======= AUTH (passwords from JSON or inline) =======
+  const authModal = document.getElementById('authModal');
+  const loginBtn = document.getElementById('loginBtn');
+  const cancelAuth = document.getElementById('cancelAuth');
+  const authErr = document.getElementById('authErr');
+  const emailIn = document.getElementById('email');
+  const passIn = document.getElementById('password');
+
+  const CONFIG = {
+    remoteJsonUrl: 'https://stephanelkhoury.com/harmonix-users.json', // optional external DB (same-origin/CORS must allow)
+    users: [
+      // Fallback local DB (sha256 of password). Replace with your entries or leave empty.
+      // Example: { email:'demo@stephanelkhoury.com', hash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' }
+    ]
+  };
+
+  async function sha256Hex(str){
+    const enc = new TextEncoder();
+    const buf = await crypto.subtle.digest('SHA-256', enc.encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  async function fetchUsers(){
+    try{
+      if(!CONFIG.remoteJsonUrl) return CONFIG.users;
+      const r = await fetch(CONFIG.remoteJsonUrl, {cache:'no-store'});
+      if(!r.ok) throw new Error('fetch failed');
+      const data = await r.json();
+      if(Array.isArray(data)) return data; return CONFIG.users;
+    }catch(e){ return CONFIG.users; }
+  }
+  async function verify(email, pass){
+    const list = await fetchUsers();
+    const needle = (email||'').trim().toLowerCase();
+    const user = list.find(u => (u.email||'').toLowerCase() === needle);
+    if(!user) return false;
+    const h = await sha256Hex(pass||'');
+    return h === user.hash;
+  }
+  function requireAuth(){
+    if(sessionStorage.getItem('harmonix_auth_ok') === '1') return; // already in
+    authModal.style.display = 'flex';
+  }
+  async function doLogin(){
+    authErr.textContent = '';
+    const ok = await verify(emailIn.value, passIn.value);
+    if(ok){ authModal.style.display = 'none'; sessionStorage.setItem('harmonix_auth_ok','1'); }
+    else { authErr.textContent = 'Invalid credentials.'; }
+  }
+  loginBtn.addEventListener('click', doLogin);
+  passIn.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+  cancelAuth.addEventListener('click', () => { authModal.style.display = 'none'; });
+
+  // Gate the main UI until auth passes
+  requireAuth();
+})();
+</script>
+</body>
+</html>
