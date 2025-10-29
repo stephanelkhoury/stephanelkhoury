@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = cart.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
     return NextResponse.json({
       success: true,
