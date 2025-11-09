@@ -136,9 +136,9 @@
       <div class="row" style="justify-content:space-between">
         <button class="btn ghost" id="cancelAuth">Cancel</button>
         <button class="btn" id="loginBtn">Enter</button>
-      </div>
+      <!-- </div>
       <p class="hint">Managed by Stephan • Data source can be a JSON at <code>https://stephanelkhoury.com/harmonix-users.json</code>.</p>
-    </div>
+    </div> -->
   </div>
 
 <script>
@@ -395,7 +395,7 @@
   const passIn = document.getElementById('password');
 
   const CONFIG = {
-    remoteJsonUrl: 'https://stephanelkhoury.com/harmonix-users.json', // optional external DB (same-origin/CORS must allow)
+    remoteJsonUrl: '/harmonix-users.json', // relative path to avoid CORS issues
     users: [
       // Fallback local DB (sha256 of password). Replace with your entries or leave empty.
       // Example: { email:'demo@stephanelkhoury.com', hash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' }

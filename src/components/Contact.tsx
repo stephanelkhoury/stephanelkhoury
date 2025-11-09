@@ -131,8 +131,8 @@ const Contact: React.FC = () => {
                     <SocialLink href="https://www.linkedin.com/in/stephanelkhoury/" icon={faLinkedin} color="#0077B5" delay={0.1} />
                     <SocialLink href="https://github.com/stephanelkhoury" icon={faGithub} color="#333" delay={0.2} />
                     <SocialLink href="https://wa.me/96178965292" icon={faWhatsapp} color="#25D366" delay={0.3} />
-                    <SocialLink href="https://t.me/stephanelkhoury" icon={faTelegram} color="#0088cc" delay={0.4} />
-                    <SocialLink href="https://instagram.com/stephanelkhoury" icon={faInstagram} color="#E4405F" delay={0.5} />
+                    <SocialLink href="https://t.me/stephan_el_khoury" icon={faTelegram} color="#0088cc" delay={0.4} />
+                    <SocialLink href="https://www.instagram.com/stephan.elkhoury/" icon={faInstagram} color="#E4405F" delay={0.5} />
                     <SocialLink href="https://facebook.com/stephanelkhoury" icon={faFacebook} color="#1877F2" delay={0.6} />
                     <SocialLink href="https://x.com/stephanelkhoury" icon={faXTwitter} color="#000000" delay={0.7} />
                   </div>
