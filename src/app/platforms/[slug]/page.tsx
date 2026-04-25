@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import PremiumNavbar from '@/components/premium/Navbar';
 import PremiumFooter from '@/components/premium/Footer';
 import { prisma } from '@/lib/prisma';
 import { defaultSystems } from '@/lib/default-content';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -43,7 +44,7 @@ export default async function PlatformDetailPage({ params }: PageProps) {
           <div className="mt-5 grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
             <article className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 p-8">
               <div className="flex items-center gap-4 mb-6">
-                <img src={platform.logoUrl} alt={platform.name} className="h-14 w-14 object-contain" />
+                <Image src={platform.logoUrl} alt={platform.name} className="h-14 w-14 object-contain" width={56} height={56} />
                 <div>
                   <p className="text-xs uppercase tracking-widest text-blue-400 mb-1">Platform</p>
                   <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{platform.name}</h1>

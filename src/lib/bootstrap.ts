@@ -26,6 +26,18 @@ export async function ensureSeedData() {
     await prisma.project.createMany({
       data: defaultProjects.map((project) => ({ ...project })),
     });
+  } else {
+    const existingProjects = await prisma.project.findMany({
+      select: { slug: true },
+    });
+    const existingSlugs = new Set(existingProjects.map((project) => project.slug));
+    const missingProjects = defaultProjects.filter((project) => !existingSlugs.has(project.slug));
+
+    if (missingProjects.length > 0) {
+      await prisma.project.createMany({
+        data: missingProjects.map((project) => ({ ...project })),
+      });
+    }
   }
 
   if (systemCount === 0) {

@@ -11,6 +11,20 @@ export type ContentBlockInput = {
   isActive: boolean;
 };
 
+export type ScreenshotItem = {
+  url: string;
+  type: 'desktop' | 'mobile';
+  caption?: string;
+};
+
+export type PerformanceMetrics = {
+  performance: number;
+  accessibility: number;
+  bestPractices: number;
+  seo: number;
+  testedAt?: string;
+};
+
 export type ProjectInput = {
   id?: string;
   title: string;
@@ -21,6 +35,12 @@ export type ProjectInput = {
   githubUrl?: string | null;
   liveUrl?: string | null;
   technologies: string[];
+  category: string;
+  date?: string | null;
+  features: string[];
+  challenges: string[];
+  screenshots: ScreenshotItem[];
+  performanceMetrics?: PerformanceMetrics | null;
   sortOrder: number;
   isActive: boolean;
 };

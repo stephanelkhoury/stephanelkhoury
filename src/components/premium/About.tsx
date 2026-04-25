@@ -45,7 +45,6 @@ export default function PremiumAbout({
 
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="relative h-full min-h-[500px] flex items-center justify-center lg:justify-end">
             <div className="relative w-full max-w-md aspect-square">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-blue-600/20 rounded-full blur-2xl animate-pulse" />
 
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl flex flex-col items-center justify-center shadow-2xl z-20">
                 <Award className="w-8 h-8 text-amber-400 mb-1" />

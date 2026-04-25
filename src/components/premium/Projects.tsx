@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -53,7 +54,13 @@ export default function PremiumProjects({ projects }: { projects: ProjectRecord[
             >
               <div className="relative h-64 overflow-hidden bg-zinc-200 dark:bg-zinc-800">
                 {project.imageUrl ? (
-                  <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <Image
+                    src={project.imageUrl}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
                 ) : (
                   <div className="w-full h-full bg-zinc-200 dark:bg-zinc-800" />
                 )}
@@ -67,7 +74,11 @@ export default function PremiumProjects({ projects }: { projects: ProjectRecord[
               <div className="p-8 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                   <h4 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">{project.title}</h4>
-                  <Link href={`/projects/${project.slug}`} className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                    aria-label={`Open ${project.title} project page`}
+                  >
                     <ArrowUpRight size={18} />
                   </Link>
                 </div>

@@ -1,15 +1,58 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import type { Metadata } from 'next';
 import PremiumNavbar from '@/components/premium/Navbar';
 import PremiumFooter from '@/components/premium/Footer';
 import { prisma } from '@/lib/prisma';
 import { defaultProjects } from '@/lib/default-content';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
+
+async function getProjectBySlug(slug: string) {
+  return process.env.DATABASE_URL
+    ? prisma.project.findUnique({ where: { slug } })
+    : defaultProjects.find((item) => item.slug === slug);
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.stephanelkhoury.com';
+
+  if (!project || !project.isActive) {
+    return {
+      title: 'Project Not Found',
+    };
+  }
+
+  const projectUrl = `${siteUrl}/projects/${project.slug}`;
+
+  return {
+    title: `${project.title}`,
+    description: project.description,
+    alternates: {
+      canonical: projectUrl,
+    },
+    openGraph: {
+      title: project.title,
+      description: project.description,
+      url: projectUrl,
+      type: 'article',
+      images: project.imageUrl ? [{ url: project.imageUrl, alt: project.title }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.title,
+      description: project.description,
+      images: project.imageUrl ? [project.imageUrl] : [],
+    },
+  };
+}
 
 function asStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -19,9 +62,7 @@ function asStringArray(value: unknown): string[] {
 export default async function ProjectDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const project = process.env.DATABASE_URL
-    ? await prisma.project.findUnique({ where: { slug } })
-    : defaultProjects.find((item) => item.slug === slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project || !project.isActive) {
     notFound();
@@ -42,7 +83,15 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             <article className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 overflow-hidden">
               <div className="h-72 md:h-96 bg-zinc-200 dark:bg-zinc-800">
                 {project.imageUrl ? (
-                  <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
+                  <Image
+                    src={project.imageUrl}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    width={1400}
+                    height={900}
+                    sizes="(max-width: 768px) 100vw, 70vw"
+                    priority
+                  />
                 ) : null}
               </div>
               <div className="p-8">

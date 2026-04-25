@@ -99,11 +99,6 @@ const Blog: React.FC = () => {
 
   return (
     <section id="blog" className="py-20 px-6 md:px-20 bg-[#0B001F]/30 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-32 right-20 w-64 h-64 bg-[#06b6d4]/20 rounded-full blur-3xl floating" />
-        <div className="absolute bottom-40 left-16 w-80 h-80 bg-[#3b82f6]/15 rounded-full blur-3xl floating" style={{ animationDelay: '3s' }} />
-      </div>
       
       <AnimatedSection>
         <div className="text-center mb-16">

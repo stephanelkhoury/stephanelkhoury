@@ -4,9 +4,6 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import gsap from 'gsap';
-import MusicNotes from './MusicNotes';
-import FloatingParticles from './FloatingParticles';
-import ThreeBackground from './ThreeBackground';
 import useSmoothScroll from './useSmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -82,17 +79,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ onClick, children }) =>
 const AnimationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useSmoothScroll();
 
-  return (
-    <>
-      {/* Global Three.js animated background - fixed across entire site */}
-      <div className="fixed inset-0 -z-10">
-        <ThreeBackground />
-      </div>
-      <FloatingParticles />
-      <MusicNotes />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
 export { AnimationProvider, AnimatedSection, AnimatedLink, AnimatedButton };

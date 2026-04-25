@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -9,7 +9,21 @@ import GradientText from './animations/GradientText';
 import { AnimatedSection, ScrollReveal } from './animations';
 import ProjectModal from './ProjectModal';
 
-interface Project {
+export interface ScreenshotItem {
+  url: string;
+  type: 'desktop' | 'mobile';
+  caption?: string;
+}
+
+export interface PerformanceMetrics {
+  performance: number;
+  accessibility: number;
+  bestPractices: number;
+  seo: number;
+  testedAt?: string;
+}
+
+export interface Project {
   title: string;
   description: string;
   image: string;
@@ -21,9 +35,12 @@ interface Project {
   features?: string[];
   challenges?: string[];
   date?: string;
+  screenshots?: ScreenshotItem[];
+  performanceMetrics?: PerformanceMetrics | null;
 }
 
-const projects: Project[] = [
+// Fallback static data used when DB is empty
+const staticProjects: Project[] = [
   {
     title: 'Modern E-Commerce Platform',
     description: 'Full-stack commerce platform with secure checkout, advanced product filtering, inventory management, and admin analytics.',
@@ -246,10 +263,43 @@ const projects: Project[] = [
   }
 ];
 
+// Map DB project to frontend format
+function mapDbProject(p: Record<string, unknown>): Project {
+  return {
+    title: (p.title as string) || '',
+    description: (p.summary as string) || '',
+    fullDescription: (p.description as string) || '',
+    image: (p.imageUrl as string) || '/projects/placeholder.jpg',
+    technologies: Array.isArray(p.technologies) ? p.technologies as string[] : [],
+    github: (p.githubUrl as string) || undefined,
+    live: (p.liveUrl as string) || undefined,
+    category: (p.category as string) || 'Web Application',
+    date: (p.date as string) || undefined,
+    features: Array.isArray(p.features) ? p.features as string[] : [],
+    challenges: Array.isArray(p.challenges) ? p.challenges as string[] : [],
+    screenshots: Array.isArray(p.screenshots) ? p.screenshots as ScreenshotItem[] : [],
+    performanceMetrics: p.performanceMetrics as PerformanceMetrics | null | undefined,
+  };
+}
+
 const Projects: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>(staticProjects);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.projects && data.projects.length > 0) {
+          setProjects(data.projects.map(mapDbProject));
+        }
+      })
+      .catch(() => {
+        // Keep static fallback
+      });
+  }, []);
   
   const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
   

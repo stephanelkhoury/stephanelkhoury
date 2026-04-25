@@ -97,12 +97,6 @@ const About: React.FC = () => {
   return (
     <>
       <section id="about" className="py-20 px-6 md:px-20 bg-[#0B001F]/30 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-[#3b82f6] to-[#06b6d4] rounded-full blur-3xl floating-animation" />
-          <div className="absolute bottom-1/3 right-1/4 w-24 h-24 bg-gradient-to-r from-[#06b6d4] to-[#10b981] rounded-full blur-2xl floating-animation" style={{ animationDelay: '2s' }} />
-        </div>
-
         <AnimatedSection>
           <TextReveal
             text="About Me"
@@ -261,12 +255,6 @@ const About: React.FC = () => {
 
       {/* Certificate Carousel Section */}
       <section className="py-16 px-6 md:px-20 bg-[#0B001F]/20 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/3 right-1/4 w-40 h-40 bg-gradient-to-r from-[#06b6d4] to-[#3b82f6] rounded-full blur-3xl floating-animation" />
-          <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-gradient-to-r from-[#10b981] to-[#06b6d4] rounded-full blur-2xl floating-animation" style={{ animationDelay: '3s' }} />
-        </div>
-
         <AnimatedSection>
           <div className="max-w-7xl mx-auto">
             <TextReveal

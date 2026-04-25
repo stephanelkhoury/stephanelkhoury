@@ -17,7 +17,6 @@ export default function PremiumArchitecture({ content }: { content: Architecture
 
   return (
     <section id="architecture" className="py-24 bg-zinc-50 dark:bg-zinc-950 relative border-t border-zinc-200/50 dark:border-zinc-900/50 overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-blue-900/10 blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-20">

@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { prisma } from '@/lib/prisma';
 import { defaultSystems } from '@/lib/default-content';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -40,7 +41,7 @@ export default async function SystemDetailPage({ params }: PageProps) {
           </Link>
 
           <div className="mt-4 mb-8 flex items-center gap-4">
-            <img src={system.logoUrl} alt={system.name} className="h-14 w-14 object-contain" />
+            <Image src={system.logoUrl} alt={system.name} className="h-14 w-14 object-contain" width={56} height={56} />
             <div>
               <h1 className="text-4xl font-bold">{system.name}</h1>
               <p className="text-gray-400">{system.shortDescription}</p>

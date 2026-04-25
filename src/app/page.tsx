@@ -11,6 +11,7 @@ import PremiumTestimonials from '@/components/premium/Testimonials';
 import PremiumContact from '@/components/premium/Contact';
 import PremiumFooter from '@/components/premium/Footer';
 import { getPublicContent } from '@/lib/bootstrap';
+import type { Metadata } from 'next';
 import type {
   HeroContent,
   AboutContent,
@@ -22,7 +23,13 @@ import type {
   ContactContent,
 } from '@/components/premium/types';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: 'Home',
+  description:
+    'Explore the portfolio of Stephan El Khoury featuring full-stack projects, client platforms, systems expertise, QA, and technical SEO execution.',
+};
 
 function asRecord(value: unknown): Record<string, unknown> {
   if (value && typeof value === 'object') {
@@ -38,6 +45,7 @@ function asStringArray(value: unknown): string[] {
 
 export default async function Home() {
   const { blocks, projects, systems, certificates } = await getPublicContent();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.stephanelkhoury.com';
   const bySlug = Object.fromEntries(blocks.map((block) => [block.slug, block]));
 
   const heroBlock = bySlug['hero-main'];
@@ -108,8 +116,36 @@ export default async function Home() {
     logoUrl: system.logoUrl,
   }));
 
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Stephan El Khoury',
+    jobTitle: 'Full-Stack Developer',
+    url: siteUrl,
+    sameAs: [
+      'https://github.com/stephanelkhoury',
+      'https://www.linkedin.com/in/stephanelkhoury',
+    ],
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Multigraphic.lb',
+    },
+    knowsAbout: [
+      'Next.js',
+      'React',
+      'Node.js',
+      'Quality Assurance',
+      'Technical SEO',
+      'Web Performance',
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <PremiumNavbar />
       <main className="min-h-screen pt-16 bg-zinc-950 text-zinc-50">
         <PremiumHero content={hero} />

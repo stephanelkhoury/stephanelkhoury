@@ -7,9 +7,6 @@ import type { ContactContent } from './types';
 export default function PremiumContact({ content }: { content: ContactContent }) {
   return (
     <section id="contact" className="py-24 bg-white dark:bg-zinc-950 relative border-t border-zinc-200/50 dark:border-zinc-900/50">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -right-1/4 w-[1000px] h-[1000px] bg-blue-600/5 rounded-full blur-[120px]" />
-      </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16">

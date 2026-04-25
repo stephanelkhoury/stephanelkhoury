@@ -3,7 +3,7 @@ import { getPublicContent } from '@/lib/bootstrap';
 import { normalizeMultigraphicPage } from '@/lib/multigraphic-page';
 import MultigraphicPageRenderer from '@/components/multigraphic/MultigraphicPageRenderer';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: 'MultigraphicLB | Stephan El Khoury',

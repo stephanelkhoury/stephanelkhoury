@@ -53,11 +53,6 @@ const Contact: React.FC = () => {
 
   return (
     <section id="contact" className="py-20 px-6 md:px-20 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-[#3b82f6]/20 to-[#06b6d4]/20 rounded-full blur-3xl floating" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-r from-[#10b981]/20 to-[#06b6d4]/20 rounded-full blur-3xl floating" style={{ animationDelay: '4s' }} />
-      </div>
       
       <AnimatedSection>
         <div className="max-w-6xl mx-auto">

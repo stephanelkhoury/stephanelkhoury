@@ -28,19 +28,25 @@ model ContentBlock {
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  summary     String
-  description String
-  imageUrl    String?
-  githubUrl   String?
-  liveUrl     String?
-  technologies Json
-  sortOrder   Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  title              String
+  slug               String   @unique
+  summary            String
+  description        String
+  imageUrl           String?
+  githubUrl          String?
+  liveUrl            String?
+  technologies       Json
+  category           String   @default("")
+  date               String?
+  features           Json     @default("[]")
+  challenges         Json     @default("[]")
+  screenshots        Json     @default("[]")
+  performanceMetrics Json?
+  sortOrder          Int      @default(0)
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model SupportedSystem {

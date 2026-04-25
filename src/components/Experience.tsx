@@ -158,17 +158,6 @@ const Experience: React.FC = () => {
 
   return (
     <section id="experience" className="py-20 px-6 md:px-20 bg-[#0B001F]/30 relative overflow-hidden min-h-screen">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#3b82f6]/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#10b981]/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
-          style={{ background: `radial-gradient(circle, ${currentExp.color}15 0%, transparent 70%)` }}
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 4, repeat: Infinity }}
-        />
-      </div>
       
       <AnimatedSection>
         <TextReveal 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAdminRequest } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { projectsPayloadSchema } from '@/lib/admin-schemas';
+import { Prisma } from '@prisma/client';
 
 export const runtime = 'nodejs';
 
@@ -49,6 +50,12 @@ export async function PUT(request: NextRequest) {
         githubUrl: project.githubUrl ?? null,
         liveUrl: project.liveUrl ?? null,
         technologies: project.technologies,
+        category: project.category ?? '',
+        date: project.date ?? null,
+        features: project.features ?? [],
+        challenges: project.challenges ?? [],
+        screenshots: project.screenshots ?? [],
+        performanceMetrics: project.performanceMetrics ?? Prisma.JsonNull,
         sortOrder: project.sortOrder,
         isActive: project.isActive,
       })),

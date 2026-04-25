@@ -11,6 +11,20 @@ export const blockSchema = z.object({
   isActive: z.boolean(),
 });
 
+export const screenshotSchema = z.object({
+  url: z.string(),
+  type: z.enum(['desktop', 'mobile']),
+  caption: z.string().optional(),
+});
+
+export const performanceMetricsSchema = z.object({
+  performance: z.number().min(0).max(100),
+  accessibility: z.number().min(0).max(100),
+  bestPractices: z.number().min(0).max(100),
+  seo: z.number().min(0).max(100),
+  testedAt: z.string().optional(),
+});
+
 export const projectSchema = z.object({
   id: z.string().optional(),
   title: z.string(),
@@ -21,6 +35,12 @@ export const projectSchema = z.object({
   githubUrl: z.string().nullable().optional(),
   liveUrl: z.string().nullable().optional(),
   technologies: z.array(z.string()),
+  category: z.string(),
+  date: z.string().nullable().optional(),
+  features: z.array(z.string()).default([]),
+  challenges: z.array(z.string()).default([]),
+  screenshots: z.array(screenshotSchema).default([]),
+  performanceMetrics: performanceMetricsSchema.nullable().optional(),
   sortOrder: z.number().int().nonnegative(),
   isActive: z.boolean(),
 });
