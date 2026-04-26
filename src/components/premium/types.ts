@@ -70,21 +70,3 @@ export type ContactContent = {
   github?: string;
   x?: string;
 };
-
-export type MultigraphicContent = {
-  logoUrl?: string;
-  kicker?: string;
-  title?: string;
-  subtitle?: string;
-  description?: string;
-  ctaLabel?: string;
-  ctaHref?: string;
-  projects?: Array<{
-    title: string;
-    category?: string;
-    summary: string;
-    imageUrl?: string;
-    href?: string;
-    tags?: string[];
-  }>;
-};

@@ -10,15 +10,6 @@ type ServiceItem = {
   iconColor?: string;
 };
 
-type MultigraphicProject = {
-  title: string;
-  category?: string;
-  summary: string;
-  imageUrl?: string;
-  href?: string;
-  tags?: string[];
-};
-
 export default function SectionsEditor() {
   const [blocks, setBlocks] = useState<ContentBlockInput[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,40 +62,10 @@ export default function SectionsEditor() {
       }));
   };
 
-  const parseMultigraphicProjects = (slug: string): MultigraphicProject[] => {
-    const raw = getBlockBySlug(slug)?.content?.projects;
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .filter((project): project is Record<string, unknown> => !!project && typeof project === 'object')
-      .map((project) => ({
-        title: String(project.title || ''),
-        category: String(project.category || ''),
-        summary: String(project.summary || ''),
-        imageUrl: String(project.imageUrl || ''),
-        href: String(project.href || ''),
-        tags: Array.isArray(project.tags)
-          ? project.tags.filter((tag): tag is string => typeof tag === 'string')
-          : [],
-      }));
-  };
-
   const updateServiceItem = (slug: string, index: number, key: keyof ServiceItem, value: unknown) => {
     const items = parseServicesItems(slug);
     const updated = items.map((item, itemIndex) => (itemIndex === index ? { ...item, [key]: value } : item));
     setBlockContentFieldBySlug(slug, 'items', updated);
-  };
-
-  const updateMultigraphicProject = (
-    slug: string,
-    index: number,
-    key: keyof MultigraphicProject,
-    value: unknown
-  ) => {
-    const projects = parseMultigraphicProjects(slug);
-    const updated = projects.map((project, projectIndex) =>
-      projectIndex === index ? { ...project, [key]: value } : project
-    );
-    setBlockContentFieldBySlug(slug, 'projects', updated);
   };
 
   const save = async () => {
@@ -135,13 +96,12 @@ export default function SectionsEditor() {
   const hero = getBlockBySlug('hero-main');
   const contact = getBlockBySlug('contact-main');
   const services = getBlockBySlug('services-main');
-  const multigraphic = getBlockBySlug('multigraphic-main');
 
   return (
     <section className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold mb-2 tracking-tight">Section CMS</h1>
-        <p className="text-slate-400">Manage homepage + Multigraphic page content directly from Neon PostgreSQL.</p>
+        <p className="text-slate-400">Manage homepage content directly from Neon PostgreSQL.</p>
       </header>
 
       {loading ? (
@@ -209,24 +169,6 @@ export default function SectionsEditor() {
             </div>
           </div>
         ))}
-      </SectionCard>
-
-      <SectionCard title="Multigraphic Page (/multigraphiclb)">
-        <div className="md:col-span-2 rounded-xl border border-slate-700/80 bg-[#020617] p-4 space-y-2">
-          <p className="text-sm text-slate-300">
-            Multigraphic is now fully block-based with live preview.
-          </p>
-          <a
-            href="/admin/multigraphic-builder"
-            className="inline-flex px-3 py-2 rounded-lg bg-slate-200 text-slate-900 text-sm font-medium hover:bg-white"
-          >
-            Open Multigraphic Builder
-          </a>
-          <p className="text-xs text-slate-400">
-            Edit header, footer, block order, and every section field from one builder.
-          </p>
-          {multigraphic ? null : <p className="text-xs text-rose-300">multigraphic-main block is missing.</p>}
-        </div>
       </SectionCard>
 
       <SectionCard title="Contact (contact-main)">

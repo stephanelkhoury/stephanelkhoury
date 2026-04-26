@@ -8,7 +8,6 @@ import { useAdminAuth } from './AdminAuthProvider';
 const links = [
   { href: '/admin', label: 'Overview' },
   { href: '/admin/full-site', label: 'Full Site Editor' },
-  { href: '/admin/multigraphic-builder', label: 'Multigraphic Builder' },
   { href: '/admin/sections', label: 'Sections' },
   { href: '/admin/projects', label: 'Projects' },
   { href: '/admin/systems', label: 'Systems' },

@@ -235,10 +235,6 @@ export default async function Home() {
         'Generative Engine Optimization',
         'Web Performance',
       ],
-      worksFor: {
-        '@type': 'Organization',
-        name: 'Multigraphic.lb',
-      },
     },
     {
       '@context': 'https://schema.org',

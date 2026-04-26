@@ -13,7 +13,7 @@ type Message = {
 const QUICK_PROMPTS = [
   'Can you build a web app for me?',
   'What are your rates/availability?',
-  'Tell me about Multigraphic.lb',
+  'What SEO services do you offer?',
   'How do I reach Stephan?',
 ];
 

@@ -6,7 +6,6 @@ import { Menu, X, Sun, Moon, Monitor } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 const navLinks = [
-  { name: 'MultigraphicLB', href: '/multigraphiclb' },
   { name: 'About', href: '#about' },
   { name: 'Services', href: '#services' },
   { name: 'Projects', href: '#projects' },

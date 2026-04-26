@@ -12,12 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 1,
     },
-    {
-      url: `${baseUrl}/multigraphiclb`,
-      lastModified: now,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
   ];
 
   const projectRoutes: MetadataRoute.Sitemap = defaultProjects.map((project) => ({

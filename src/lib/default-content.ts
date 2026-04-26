@@ -123,14 +123,7 @@ export const defaultBlocks = [
             'Built and optimized frontend systems for advertising and enterprise projects with focus on performance and user experience.',
           metrics: ['Sitecore + Sitefinity', 'Front-End Engineering', 'SEO + UX Optimization'],
         },
-        {
-          year: '2021 - Present',
-          title: 'Founder & Lead Developer',
-          company: 'Multigraphic.lb',
-          description:
-            'Designing and building full-stack websites from concept to deployment, while managing hosting, security, backups, and maintenance.',
-          metrics: ['End-to-End Delivery', 'SEO Optimization', 'UX/UI Leadership'],
-        },
+
         {
           year: 'Contract',
           title: 'Web & Multimedia Developer',
@@ -228,58 +221,7 @@ export const defaultBlocks = [
     sortOrder: 8,
     isActive: true,
   },
-  {
-    slug: 'multigraphic-main',
-    type: 'ABOUT',
-    title: 'Multigraphic.lb',
-    subtitle: 'Pixelate to Power',
-    content: {
-      logoUrl: '/logo-multigraphic.lb.png',
-      kicker: 'Startup Showcase',
-      title: 'MultigraphicLB',
-      subtitle: 'Creative engineering startup focused on high-performance digital experiences.',
-      description:
-        'Multigraphic.lb is my startup where design, engineering, and growth strategy converge. We deliver bright brand systems, modern websites, and scalable full-stack products for ambitious businesses.',
-      ctaLabel: 'Visit Multigraphic.lb',
-      ctaHref: 'https://multigraphic.lb',
-      projects: [
-        {
-          title: 'Harmonix AI',
-          category: 'AI Music Platform',
-          summary: 'AI-driven music analysis platform with real-time chord recognition, tempo insight, tuning guidance, and lyric support.',
-          imageUrl: '/projects/harmonix-hero.jpg',
-          href: '/projects/harmonix',
-          tags: ['AI', 'Audio', 'Product'],
-        },
-        {
-          title: 'Clinickable',
-          category: 'Healthcare SaaS',
-          summary: 'Clinic management platform with patient records, appointment workflows, and operational dashboards.',
-          imageUrl: '/projects/pos-crm.jpg',
-          href: '/projects/clinickable',
-          tags: ['SaaS', 'Healthcare', 'Dashboards'],
-        },
-        {
-          title: 'A2Z in F&B',
-          category: 'Food & Beverage Platform',
-          summary: 'End-to-end digital solution for F&B operations, brand growth, online ordering workflows, and customer engagement.',
-          imageUrl: '/projects/saudi-dates.jpg',
-          href: '#',
-          tags: ['F&B', 'Growth', 'Operations'],
-        },
-        {
-          title: 'Multigraphic Web Studio',
-          category: 'Startup Delivery Engine',
-          summary: 'High-performance websites and platform builds for startups and enterprises, optimized for SEO, accessibility, and conversion.',
-          imageUrl: '/projects/hi-yu-lebanon.jpg',
-          href: '#',
-          tags: ['Studio', 'SEO', 'Performance'],
-        },
-      ],
-    },
-    sortOrder: 9,
-    isActive: true,
-  },
+
 ] as const;
 
 export const defaultProjects = [
@@ -291,7 +233,7 @@ export const defaultProjects = [
       'Designed and delivered a premium clinic web experience focused on treatments, trust signals, booking journeys, and SEO-ready local discoverability.',
     imageUrl: '/projects/sancta-maria.jpg',
     githubUrl: null,
-    liveUrl: 'https://multigraphic.lb',
+    liveUrl: null,
     technologies: ['Next.js', 'UI/UX', 'Technical SEO', 'Performance Optimization'],
     sortOrder: 1,
     isActive: true,
@@ -304,7 +246,7 @@ export const defaultProjects = [
       'Built a conversion-focused brand and commerce-ready website with product storytelling, menu structure, and social proof for food business growth.',
     imageUrl: '/projects/saudi-dates.jpg',
     githubUrl: null,
-    liveUrl: 'https://multigraphic.lb',
+    liveUrl: null,
     technologies: ['WordPress', 'Brand Strategy', 'SEO', 'Content Architecture'],
     sortOrder: 2,
     isActive: true,
@@ -317,7 +259,7 @@ export const defaultProjects = [
       'Delivered a personal brand website with polished storytelling, responsive layouts, and optimized information architecture for strong professional visibility.',
     imageUrl: '/projects/guitta-tabet.jpg',
     githubUrl: null,
-    liveUrl: 'https://multigraphic.lb',
+    liveUrl: null,
     technologies: ['Next.js', 'Tailwind CSS', 'Accessibility', 'Technical SEO'],
     sortOrder: 3,
     isActive: true,
@@ -330,7 +272,7 @@ export const defaultProjects = [
       'Engineered a sports-focused digital platform with engaging content flows, mobile-first UX, and performance tuning for high interaction sessions.',
     imageUrl: '/projects/richys-entertainment.jpg',
     githubUrl: null,
-    liveUrl: 'https://multigraphic.lb',
+    liveUrl: null,
     technologies: ['React', 'TypeScript', 'Performance', 'Analytics'],
     sortOrder: 4,
     isActive: true,
@@ -400,19 +342,7 @@ export const defaultProjects = [
     sortOrder: 9,
     isActive: true,
   },
-  {
-    title: 'Multigraphic.lb Client Platforms',
-    slug: 'multigraphic-client-platforms',
-    summary: 'Freelance Full-Stack Delivery',
-    description:
-      'Designed and deployed full-stack websites from concept to production with long-term maintenance, security, and optimization.',
-    imageUrl: '/projects/hi-yu-lebanon.jpg',
-    githubUrl: null,
-    liveUrl: null,
-    technologies: ['WordPress', 'PHP', 'SEO', 'Hosting & Security'],
-    sortOrder: 10,
-    isActive: true,
-  },
+
 ] as const;
 
 export const defaultSystems = [

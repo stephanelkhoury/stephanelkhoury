@@ -7,11 +7,6 @@ const cards = [
     description: 'Edit the entire website payload (blocks, projects, systems, certificates) from one JSON CMS.',
   },
   {
-    href: '/admin/multigraphic-builder',
-    title: 'Multigraphic Builder',
-    description: 'WordPress-like block builder for /multigraphiclb with live preview and full control over sections.',
-  },
-  {
     href: '/admin/sections',
     title: 'Sections CMS',
     description: 'Edit Hero, About, Experience, and Contact with structured fields.',
