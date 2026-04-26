@@ -123,6 +123,14 @@ export const defaultBlocks = [
             'Built and optimized frontend systems for advertising and enterprise projects with focus on performance and user experience.',
           metrics: ['Sitecore + Sitefinity', 'Front-End Engineering', 'SEO + UX Optimization'],
         },
+        {
+          year: 'Founder',
+          title: 'CEO & Founder',
+          company: 'Multigraphic.lb',
+          description:
+            'Founded and led a creative agency delivering comprehensive design, branding, web development, and multimedia solutions to regional clients.',
+          metrics: ['Agency Leadership', 'Design + Development', 'Client Delivery'],
+        },
 
         {
           year: 'Contract',
@@ -340,6 +348,19 @@ export const defaultProjects = [
     liveUrl: null,
     technologies: ['Sitecore', 'Sitefinity', 'Next.js', 'SEO'],
     sortOrder: 9,
+    isActive: true,
+  },
+  {
+    title: 'Multigraphic.lb',
+    slug: 'multigraphic',
+    summary: 'Creative Agency & Design Studio',
+    description:
+      'Founded and led Multigraphic.lb as CEO & Founder. A creative agency delivering design, branding, web development, and multimedia solutions for regional clients.',
+    imageUrl: '/projects/multigraphic.jpg',
+    githubUrl: null,
+    liveUrl: 'https://multigraphic-lb.vercel.app',
+    technologies: ['Design', 'Branding', 'Web Development', 'Multimedia'],
+    sortOrder: 10,
     isActive: true,
   },
 
