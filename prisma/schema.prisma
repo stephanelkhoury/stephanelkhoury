@@ -97,3 +97,16 @@ model ChatMessage {
 
   @@index([sessionId, createdAt])
 }
+
+model BlobAsset {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  pathname    String   @unique
+  contentType String?
+  size        Int
+  source      String   @default("admin")
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([source, createdAt])
+}

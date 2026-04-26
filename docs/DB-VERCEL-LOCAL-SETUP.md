@@ -32,6 +32,7 @@ The app uses these main tables:
 - `DATABASE_URL_UNPOOLED`
 - `ADMIN_DASHBOARD_TOKEN`
 - `GEMINI_API_KEY`
+- `BLOB_READ_WRITE_TOKEN`
 
 Additional Postgres compatibility keys are included in `.env` and `.env.local`:
 
@@ -90,6 +91,7 @@ Ensure at minimum `Production` and `Development` have:
 - `DATABASE_URL_UNPOOLED`
 - `ADMIN_DASHBOARD_TOKEN`
 - `GEMINI_API_KEY`
+- `BLOB_READ_WRITE_TOKEN`
 
 ### Deploy
 

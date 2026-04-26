@@ -11,6 +11,7 @@ import PremiumTestimonials from '@/components/premium/Testimonials';
 import PremiumContact from '@/components/premium/Contact';
 import PremiumFooter from '@/components/premium/Footer';
 import { getPublicContent } from '@/lib/bootstrap';
+import { defaultSystems } from '@/lib/default-content';
 import type { Metadata } from 'next';
 import type {
   HeroContent,
@@ -110,11 +111,41 @@ export default async function Home() {
     technologies: asStringArray(project.technologies),
   }));
 
-  const platformLogos = systems.map((system) => ({
-    name: system.name,
-    slug: system.slug,
-    logoUrl: system.logoUrl,
-  }));
+  const hiddenPlatformSlugs = new Set(['sitecore', 'sitefinity']);
+
+  const mergedSystems = new Map<string, { name: string; slug: string; logoUrl: string; sortOrder: number }>();
+
+  systems
+    .filter((system) => !hiddenPlatformSlugs.has(system.slug))
+    .forEach((system) => {
+      mergedSystems.set(system.slug, {
+        name: system.name,
+        slug: system.slug,
+        logoUrl: system.logoUrl,
+        sortOrder: system.sortOrder,
+      });
+    });
+
+  defaultSystems
+    .filter((system) => !hiddenPlatformSlugs.has(system.slug) && system.isActive)
+    .forEach((system) => {
+      if (!mergedSystems.has(system.slug)) {
+        mergedSystems.set(system.slug, {
+          name: system.name,
+          slug: system.slug,
+          logoUrl: system.logoUrl,
+          sortOrder: system.sortOrder,
+        });
+      }
+    });
+
+  const platformLogos = Array.from(mergedSystems.values())
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map((system) => ({
+      name: system.name,
+      slug: system.slug,
+      logoUrl: system.logoUrl,
+    }));
 
   const structuredData = {
     '@context': 'https://schema.org',

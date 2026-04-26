@@ -32,6 +32,11 @@ const cards = [
     description: 'Maintain certificates, issuers, file URLs, and previews.',
   },
   {
+    href: '/admin/blob',
+    title: 'Blob Storage',
+    description: 'Upload/list/delete files in Vercel Blob with metadata persisted in Neon.',
+  },
+  {
     href: '/admin/chats',
     title: 'Chat Logs',
     description: 'Inspect all stored chat sessions and assistant responses.',

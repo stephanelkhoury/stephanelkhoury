@@ -20,9 +20,12 @@ function asArray(value: unknown): string[] {
 export default async function PlatformDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const platform = process.env.DATABASE_URL
+  const dbPlatform = process.env.DATABASE_URL
     ? await prisma.supportedSystem.findUnique({ where: { slug } })
-    : defaultSystems.find((item) => item.slug === slug);
+    : null;
+
+  const fallbackPlatform = defaultSystems.find((item) => item.slug === slug);
+  const platform = dbPlatform ?? fallbackPlatform;
 
   if (!platform || !platform.isActive) {
     notFound();
