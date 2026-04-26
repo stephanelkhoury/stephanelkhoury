@@ -4,6 +4,7 @@ import PremiumAbout from '@/components/premium/About';
 import PremiumServices from '@/components/premium/Services';
 import PremiumProjects from '@/components/premium/Projects';
 import PlatformLogos from '@/components/premium/PlatformLogos';
+import PremiumSeoExpertise from '@/components/premium/SeoExpertise';
 import PremiumSkills from '@/components/premium/Skills';
 import PremiumExperience from '@/components/premium/Experience';
 import PremiumArchitecture from '@/components/premium/Architecture';
@@ -27,9 +28,43 @@ import type {
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: 'Home',
+  title: 'Full-Stack Developer, SEO Expert, and AI Search Expert',
   description:
-    'Explore the portfolio of Stephan El Khoury featuring full-stack projects, client platforms, systems expertise, QA, and technical SEO execution.',
+    'Explore the portfolio of Stephan El Khoury featuring full-stack projects, technical SEO, AI search optimization, client platforms, QA, and performance-driven product delivery.',
+  keywords: [
+    'full-stack developer Lebanon',
+    'SEO expert Lebanon',
+    'AI search expert',
+    'AEO consultant',
+    'GEO consultant',
+    'technical SEO specialist',
+    'Next.js SEO expert',
+  ],
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Stephan El Khoury | Full-Stack Developer, SEO Expert, AI Search Expert',
+    description:
+      'Full-stack product delivery with technical SEO, AI search optimization, performance engineering, QA, and scalable web platforms.',
+    url: '/',
+    type: 'website',
+    images: [
+      {
+        url: '/images/profile/stephan-profile.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Stephan El Khoury portfolio',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Stephan El Khoury | Full-Stack Developer, SEO Expert, AI Search Expert',
+    description:
+      'Technical SEO, AI search optimization, QA, and full-stack engineering for high-performance digital products.',
+    images: ['/images/profile/stephan-profile.jpg'],
+  },
 };
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -147,29 +182,125 @@ export default async function Home() {
       logoUrl: system.logoUrl,
     }));
 
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Stephan El Khoury',
-    jobTitle: 'Full-Stack Developer',
-    url: siteUrl,
-    sameAs: [
-      'https://github.com/stephanelkhoury',
-      'https://www.linkedin.com/in/stephanelkhoury',
-    ],
-    worksFor: {
-      '@type': 'Organization',
-      name: 'Multigraphic.lb',
+  const seoFaqs = [
+    {
+      question: 'What SEO services does Stephan El Khoury provide?',
+      answer:
+        'I deliver technical SEO audits, structured data implementation, crawl and indexation fixes, internal linking improvements, Core Web Vitals optimization, and on-page search enhancements for modern websites and applications.',
     },
-    knowsAbout: [
-      'Next.js',
-      'React',
-      'Node.js',
-      'Quality Assurance',
-      'Technical SEO',
-      'Web Performance',
-    ],
-  };
+    {
+      question: 'What is AI search optimization?',
+      answer:
+        'AI search optimization improves how your brand, pages, and expertise are understood by answer engines and AI-powered results such as Google AI Overviews, ChatGPT, Gemini, and Perplexity through stronger structure, authority signals, and semantic clarity.',
+    },
+    {
+      question: 'Do you handle AEO and GEO strategies?',
+      answer:
+        'Yes. I work on Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) by improving schema coverage, entity clarity, page usefulness, content structure, and technical performance so content is easier for AI systems to extract and cite.',
+    },
+    {
+      question: 'Can technical SEO be combined with product engineering?',
+      answer:
+        'Yes. My approach combines code-level implementation with SEO strategy so rendering, metadata, structured data, internal linking, page speed, accessibility, and analytics work together rather than as separate checklists.',
+    },
+  ];
+
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      '@id': `${siteUrl}/#person`,
+      name: 'Stephan El Khoury',
+      jobTitle: 'Full-Stack Developer, SEO Expert, AI Search Expert',
+      description:
+        'Full-stack developer with expertise in technical SEO, AI search optimization, QA, and high-performance digital product delivery.',
+      url: siteUrl,
+      image: `${siteUrl}/images/profile/stephan-profile.jpg`,
+      email: 'mailto:stephanelkhoury2000@gmail.com',
+      telephone: '+961391906',
+      sameAs: [
+        'https://github.com/stephanelkhoury',
+        'https://www.linkedin.com/in/stephanelkhoury',
+        'https://www.instagram.com/stephanelkhoury',
+        'https://x.com/stephanelkhoury',
+      ],
+      knowsAbout: [
+        'Next.js',
+        'React',
+        'Node.js',
+        'Quality Assurance',
+        'Technical SEO',
+        'AI Search Optimization',
+        'Answer Engine Optimization',
+        'Generative Engine Optimization',
+        'Web Performance',
+      ],
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Multigraphic.lb',
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ProfessionalService',
+      '@id': `${siteUrl}/#services`,
+      name: 'Stephan El Khoury Digital Services',
+      url: siteUrl,
+      image: `${siteUrl}/images/profile/stephan-profile.jpg`,
+      description:
+        'Professional services spanning full-stack development, technical SEO, AI search optimization, QA, and performance engineering.',
+      provider: {
+        '@id': `${siteUrl}/#person`,
+      },
+      areaServed: 'Worldwide',
+      serviceType: [
+        'Full-Stack Development',
+        'Technical SEO',
+        'AI Search Optimization',
+        'AEO',
+        'GEO',
+        'Quality Assurance',
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'Stephan El Khoury',
+      description:
+        'Portfolio website for full-stack development, SEO expertise, AI search optimization, and digital product delivery.',
+      publisher: {
+        '@id': `${siteUrl}/#person`,
+      },
+      inLanguage: 'en-US',
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      '@id': `${siteUrl}/#faq`,
+      mainEntity: seoFaqs.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      '@id': `${siteUrl}/#projects`,
+      name: 'Featured Projects',
+      itemListElement: mappedProjects.slice(0, 10).map((project, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${siteUrl}/projects/${project.slug}`,
+        name: project.title,
+      })),
+    },
+  ];
 
   return (
     <>
@@ -182,6 +313,7 @@ export default async function Home() {
         <PremiumHero content={hero} />
         <PremiumAbout content={about} certificationsCount={certificates.length} />
         <PremiumServices content={services} />
+        <PremiumSeoExpertise faqs={seoFaqs} />
         <PremiumProjects projects={mappedProjects} />
         <PlatformLogos items={platformLogos} />
         <PremiumSkills content={skills} />

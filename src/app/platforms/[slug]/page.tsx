@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import PremiumNavbar from '@/components/premium/Navbar';
 import PremiumFooter from '@/components/premium/Footer';
 import { prisma } from '@/lib/prisma';
@@ -17,15 +18,56 @@ function asArray(value: unknown): string[] {
   return value.filter((item): item is string => typeof item === 'string');
 }
 
-export default async function PlatformDetailPage({ params }: PageProps) {
-  const { slug } = await params;
-
+async function getPlatformBySlug(slug: string) {
   const dbPlatform = process.env.DATABASE_URL
     ? await prisma.supportedSystem.findUnique({ where: { slug } })
     : null;
 
-  const fallbackPlatform = defaultSystems.find((item) => item.slug === slug);
-  const platform = dbPlatform ?? fallbackPlatform;
+  return dbPlatform ?? defaultSystems.find((item) => item.slug === slug);
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const platform = await getPlatformBySlug(slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.stephanelkhoury.com';
+
+  if (!platform || !platform.isActive) {
+    return {
+      title: 'Platform Not Found',
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const platformUrl = `${siteUrl}/platforms/${platform.slug}`;
+
+  return {
+    title: `${platform.name} Platform Experience`,
+    description: platform.shortDescription,
+    alternates: {
+      canonical: platformUrl,
+    },
+    openGraph: {
+      title: `${platform.name} | Stephan El Khoury`,
+      description: platform.shortDescription,
+      url: platformUrl,
+      type: 'website',
+      images: platform.logoUrl ? [{ url: platform.logoUrl, alt: platform.name }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${platform.name} | Stephan El Khoury`,
+      description: platform.shortDescription,
+      images: platform.logoUrl ? [platform.logoUrl] : [],
+    },
+  };
+}
+
+export default async function PlatformDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const platform = await getPlatformBySlug(slug);
 
   if (!platform || !platform.isActive) {
     notFound();

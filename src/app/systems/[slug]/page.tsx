@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { prisma } from '@/lib/prisma';
@@ -12,16 +13,59 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+async function getSystemBySlug(slug: string) {
+  return process.env.DATABASE_URL
+    ? prisma.supportedSystem.findUnique({ where: { slug } })
+    : defaultSystems.find((item) => item.slug === slug);
+}
+
 function asArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === 'string');
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const system = await getSystemBySlug(slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.stephanelkhoury.com';
+
+  if (!system || !system.isActive) {
+    return {
+      title: 'System Not Found',
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const systemUrl = `${siteUrl}/systems/${system.slug}`;
+
+  return {
+    title: `${system.name} System Experience`,
+    description: system.shortDescription,
+    alternates: {
+      canonical: systemUrl,
+    },
+    openGraph: {
+      title: `${system.name} | Stephan El Khoury`,
+      description: system.shortDescription,
+      url: systemUrl,
+      type: 'website',
+      images: system.logoUrl ? [{ url: system.logoUrl, alt: system.name }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${system.name} | Stephan El Khoury`,
+      description: system.shortDescription,
+      images: system.logoUrl ? [system.logoUrl] : [],
+    },
+  };
+}
+
 export default async function SystemDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const system = process.env.DATABASE_URL
-    ? await prisma.supportedSystem.findUnique({ where: { slug } })
-    : defaultSystems.find((item) => item.slug === slug);
+  const system = await getSystemBySlug(slug);
 
   if (!system || !system.isActive) {
     notFound();

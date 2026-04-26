@@ -21,22 +21,39 @@ const sora = Sora({
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.stephanelkhoury.com'),
   title: {
-    default: 'Stephan El Khoury | Full-Stack Developer Portfolio',
+    default: 'Stephan El Khoury | Full-Stack Developer, SEO Expert, AI Search Expert',
     template: '%s | Stephan El Khoury',
   },
   description:
-    'Portfolio of Stephan El Khoury, a full-stack developer, QA analyst, and technical SEO specialist building high-performance digital products.',
+    'Portfolio of Stephan El Khoury, a full-stack developer, technical SEO expert, and AI search optimization specialist building high-performance digital products.',
   keywords: [
     'Stephan El Khoury',
     'Full-Stack Developer',
+    'SEO Expert',
+    'AI Search Expert',
+    'AEO Expert',
+    'GEO Expert',
     'Portfolio',
     'Next.js Developer',
     'Technical SEO',
+    'AI Search Optimization',
+    'Google AI Overviews',
+    'ChatGPT SEO',
+    'Perplexity SEO',
     'QA Analyst',
     'Multigraphic',
   ],
+  authors: [{ name: 'Stephan El Khoury', url: 'https://www.stephanelkhoury.com' }],
+  creator: 'Stephan El Khoury',
+  publisher: 'Stephan El Khoury',
+  category: 'Technology',
+  classification: 'Portfolio, SEO, Full-Stack Development, AI Search Optimization',
+  referrer: 'origin-when-cross-origin',
   alternates: {
     canonical: '/',
+    languages: {
+      'en-US': '/',
+    },
   },
   robots: {
     index: true,
@@ -54,15 +71,24 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://www.stephanelkhoury.com',
     siteName: 'Stephan El Khoury',
-    title: 'Stephan El Khoury | Full-Stack Developer Portfolio',
+    title: 'Stephan El Khoury | Full-Stack Developer, SEO Expert, AI Search Expert',
     description:
-      'Explore projects, systems, and experience across full-stack development, QA, and technical SEO.',
+      'Explore projects, technical SEO execution, AI search optimization, platforms, and product delivery across full-stack engineering.',
+    images: [
+      {
+        url: '/images/profile/stephan-profile.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Stephan El Khoury profile and portfolio',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Stephan El Khoury | Full-Stack Developer Portfolio',
+    title: 'Stephan El Khoury | Full-Stack Developer, SEO Expert, AI Search Expert',
     description:
-      'Explore projects, systems, and experience across full-stack development, QA, and technical SEO.',
+      'Explore projects, technical SEO execution, AI search optimization, platforms, and product delivery across full-stack engineering.',
+    images: ['/images/profile/stephan-profile.jpg'],
   },
 };
 
