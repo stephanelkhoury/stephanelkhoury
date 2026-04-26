@@ -96,8 +96,8 @@ const Contact: React.FC = () => {
                     <ContactInfo 
                       icon={faPhone}
                       label="Phone"
-                      value="+961 78 965 292"
-                      href="tel:+96178965292"
+                      value="+961391906"
+                      href="tel:+961391906"
                       delay={0.2}
                     />
                     <ContactInfo 
@@ -125,7 +125,7 @@ const Contact: React.FC = () => {
                   <div className="flex flex-wrap justify-center gap-4">
                     <SocialLink href="https://www.linkedin.com/in/stephanelkhoury/" icon={faLinkedin} color="#0077B5" delay={0.1} />
                     <SocialLink href="https://github.com/stephanelkhoury" icon={faGithub} color="#333" delay={0.2} />
-                    <SocialLink href="https://wa.me/96178965292" icon={faWhatsapp} color="#25D366" delay={0.3} />
+                    <SocialLink href="https://wa.me/961391906" icon={faWhatsapp} color="#25D366" delay={0.3} />
                     <SocialLink href="https://t.me/stephanelkhoury" icon={faTelegram} color="#0088cc" delay={0.4} />
                     <SocialLink href="https://instagram.com/stephanelkhoury" icon={faInstagram} color="#E4405F" delay={0.5} />
                     <SocialLink href="https://facebook.com/stephanelkhoury" icon={faFacebook} color="#1877F2" delay={0.6} />

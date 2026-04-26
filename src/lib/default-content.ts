@@ -220,7 +220,7 @@ export const defaultBlocks = [
       title: "Let's build something",
       subtitle: 'Open to full-time, contract, and consulting opportunities.',
       email: 'stephanelkhoury2000@gmail.com',
-      phone: '+96178965292',
+      phone: '+961391906',
       location: 'Lebanon',
       linkedin: 'https://www.linkedin.com/in/stephanelkhoury',
       github: 'https://github.com/stephanelkhoury',

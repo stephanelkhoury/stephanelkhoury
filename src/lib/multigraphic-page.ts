@@ -504,7 +504,7 @@ export function getDefaultMultigraphicPage(): MultigraphicPageContent {
           emailLabel: 'Email Me',
           email: 'stephanelkhoury2000@gmail.com',
           phoneLabel: 'Phone',
-          phone: '+96178965292',
+          phone: '+961391906',
           locationLabel: 'Location',
           location: 'Lebanon',
           socialLabel: 'Connect across platforms',
