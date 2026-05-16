@@ -239,7 +239,7 @@ export const defaultProjects = [
     summary: 'Medical Aesthetics Clinic Website',
     description:
       'Designed and delivered a premium clinic web experience focused on treatments, trust signals, booking journeys, and SEO-ready local discoverability.',
-    imageUrl: '/projects/sancta-maria.jpg',
+    imageUrl: '/projects/haven-medical-beauty-clinic.webp',
     githubUrl: null,
     liveUrl: null,
     technologies: ['Next.js', 'UI/UX', 'Technical SEO', 'Performance Optimization'],
@@ -252,7 +252,7 @@ export const defaultProjects = [
     summary: 'Artisanal Food Brand Platform',
     description:
       'Built a conversion-focused brand and commerce-ready website with product storytelling, menu structure, and social proof for food business growth.',
-    imageUrl: '/projects/saudi-dates.jpg',
+    imageUrl: '/projects/celine-homemade-delights.svg',
     githubUrl: null,
     liveUrl: null,
     technologies: ['WordPress', 'Brand Strategy', 'SEO', 'Content Architecture'],
@@ -278,7 +278,7 @@ export const defaultProjects = [
     summary: 'Sports Platform Experience',
     description:
       'Engineered a sports-focused digital platform with engaging content flows, mobile-first UX, and performance tuning for high interaction sessions.',
-    imageUrl: '/projects/richys-entertainment.jpg',
+    imageUrl: '/projects/sportsfusion.webp',
     githubUrl: null,
     liveUrl: null,
     technologies: ['React', 'TypeScript', 'Performance', 'Analytics'],
@@ -291,7 +291,7 @@ export const defaultProjects = [
     summary: 'AI-Powered Music Analysis Platform',
     description:
       'Built a platform for real-time chord recognition, tempo analysis, tuning support, and lyric extraction using AI-driven processing.',
-    imageUrl: '/projects/harmonix.jpg',
+    imageUrl: '/projects/harmonix-brand.png',
     githubUrl: null,
     liveUrl: null,
     technologies: ['React', 'FastAPI', 'AI Models', 'Web Audio'],

@@ -19,6 +19,12 @@ async function getProjectBySlug(slug: string) {
     : defaultProjects.find((item) => item.slug === slug);
 }
 
+function resolveProjectImageUrl(slug: string, imageUrl: string | null | undefined) {
+  if (imageUrl) return imageUrl;
+  const fallback = defaultProjects.find((item) => item.slug === slug);
+  return fallback?.imageUrl ?? null;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
@@ -31,6 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const projectUrl = `${siteUrl}/projects/${project.slug}`;
+  const imageUrl = resolveProjectImageUrl(project.slug, project.imageUrl);
 
   return {
     title: `${project.title}`,
@@ -43,13 +50,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: project.description,
       url: projectUrl,
       type: 'article',
-      images: project.imageUrl ? [{ url: project.imageUrl, alt: project.title }] : [],
+      images: imageUrl ? [{ url: imageUrl, alt: project.title }] : [],
     },
     twitter: {
       card: 'summary_large_image',
       title: project.title,
       description: project.description,
-      images: project.imageUrl ? [project.imageUrl] : [],
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }
@@ -69,6 +76,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   }
 
   const technologies = asStringArray(project.technologies);
+  const imageUrl = resolveProjectImageUrl(project.slug, project.imageUrl);
 
   return (
     <>
@@ -82,9 +90,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <div className="mt-5 grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
             <article className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 overflow-hidden">
               <div className="h-72 md:h-96 bg-zinc-200 dark:bg-zinc-800">
-                {project.imageUrl ? (
+                {imageUrl ? (
                   <Image
-                    src={project.imageUrl}
+                    src={imageUrl}
                     alt={project.title}
                     className="w-full h-full object-cover"
                     width={1400}

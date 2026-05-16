@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_SESSION_COOKIE } from '@/lib/admin-auth';
+
+const ADMIN_SESSION_COOKIE = 'admin_session';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

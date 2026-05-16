@@ -12,7 +12,7 @@ import PremiumTestimonials from '@/components/premium/Testimonials';
 import PremiumContact from '@/components/premium/Contact';
 import PremiumFooter from '@/components/premium/Footer';
 import { getPublicContent } from '@/lib/bootstrap';
-import { defaultSystems } from '@/lib/default-content';
+import { defaultProjects, defaultSystems } from '@/lib/default-content';
 import type { Metadata } from 'next';
 import type {
   HeroContent,
@@ -134,13 +134,17 @@ export default async function Home() {
     subtitle: contactBlock?.subtitle,
   } as ContactContent;
 
+  const defaultProjectImageBySlug = new Map<string, string>(
+    defaultProjects.map((project) => [project.slug, project.imageUrl])
+  );
+
   const mappedProjects = projects.map((project) => ({
     id: project.id,
     slug: project.slug,
     title: project.title,
     summary: project.summary,
     description: project.description,
-    imageUrl: project.imageUrl,
+    imageUrl: project.imageUrl || defaultProjectImageBySlug.get(project.slug) || null,
     liveUrl: project.liveUrl,
     githubUrl: project.githubUrl,
     technologies: asStringArray(project.technologies),
