@@ -23,8 +23,9 @@ function TypingDots() {
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce"
-          style={{ animationDelay: `${i * 0.15}s` }}
+          className={`w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce ${
+            i === 1 ? '[animation-delay:150ms]' : i === 2 ? '[animation-delay:300ms]' : ''
+          }`}
         />
       ))}
     </div>
@@ -110,14 +111,14 @@ export default function LiveChatWidget() {
         onClick={open ? () => setOpen(false) : handleOpen}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-shadow"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-2.5 px-3 sm:px-4 py-3 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-shadow min-h-11"
       >
         {open ? (
           <X size={18} />
         ) : (
           <>
             <MessageSquare size={18} />
-            <span className="text-sm">Chat with me</span>
+            <span className="text-xs sm:text-sm">Chat with me</span>
             {/* Online indicator */}
             <span className="flex items-center gap-1 ml-1 text-xs font-normal text-green-200">
               <span className="relative flex h-2 w-2">
@@ -144,8 +145,8 @@ export default function LiveChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-            className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] rounded-2xl border border-zinc-300 dark:border-zinc-700/60 bg-white dark:bg-zinc-950 shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden flex flex-col"
-            style={{ maxHeight: '580px' }}
+            className="fixed bottom-20 right-2 left-2 sm:left-auto sm:bottom-24 sm:right-6 z-50 sm:w-[380px] rounded-2xl border border-zinc-300 dark:border-zinc-700/60 bg-white dark:bg-zinc-950 shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden flex flex-col"
+            style={{ maxHeight: 'min(580px, calc(100dvh - 110px))' }}
           >
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 bg-zinc-100/80 dark:bg-zinc-900/80 border-b border-zinc-300 dark:border-zinc-800">
@@ -162,13 +163,13 @@ export default function LiveChatWidget() {
                   Online — usually replies instantly
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
+              <button onClick={() => setOpen(false)} className="text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors" aria-label="Close chat" title="Close chat">
                 <X size={16} />
               </button>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar" style={{ minHeight: 240 }}>
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 no-scrollbar min-h-[220px]">
               {messages.length === 0 && (
                 <div className="space-y-3">
                   <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
@@ -229,6 +230,8 @@ export default function LiveChatWidget() {
                 onClick={() => void send()}
                 disabled={loading || !input.trim()}
                 className="flex items-center justify-center w-9 h-9 shrink-0 rounded-xl bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                aria-label="Send message"
+                title="Send"
               >
                 <Send size={14} />
               </button>

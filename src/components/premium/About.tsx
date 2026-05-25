@@ -15,25 +15,25 @@ export default function PremiumAbout({
   const stats = content.stats ?? [];
 
   return (
-    <section id="about" className="py-24 bg-white dark:bg-zinc-950 relative overflow-hidden border-t border-zinc-200/50 dark:border-zinc-900/50">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <section id="about" className="py-16 md:py-24 bg-white dark:bg-zinc-950 relative overflow-hidden border-t border-zinc-200/50 dark:border-zinc-900/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="space-y-8">
             <div>
               <h2 className="text-sm font-semibold text-blue-500 uppercase tracking-widest mb-2">{content.kicker}</h2>
-              <h3 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white tracking-tight mb-6">
+              <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white tracking-tight mb-5 md:mb-6">
                 {content.headline}{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">{content.headlineAccent}</span>
               </h3>
             </div>
 
-            <div className="space-y-6 text-zinc-700 dark:text-zinc-400 text-lg leading-relaxed">
+            <div className="space-y-5 md:space-y-6 text-zinc-700 dark:text-zinc-400 text-base sm:text-lg leading-relaxed">
               {paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 pt-2 md:pt-4">
               {stats.map((stat) => (
                 <div key={stat.label} className="border border-zinc-300 dark:border-zinc-800 bg-zinc-100/70 dark:bg-zinc-900/50 p-4 rounded-xl">
                   <div className="text-3xl font-bold text-zinc-900 dark:text-white mb-1">{stat.value}</div>
@@ -43,7 +43,7 @@ export default function PremiumAbout({
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="relative h-full min-h-[500px] flex items-center justify-center lg:justify-end">
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="relative h-full min-h-[340px] sm:min-h-[420px] md:min-h-[500px] flex items-center justify-center lg:justify-end">
             <div className="relative w-full max-w-md aspect-square">
 
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl flex flex-col items-center justify-center shadow-2xl z-20">

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Sora } from 'next/font/google';
 import { AnimationProvider } from '@/components/animations';
 import LiveChatWidget from '@/components/dynamic/LiveChatWidget';
@@ -82,6 +82,13 @@ export const metadata: Metadata = {
       'Explore projects, technical SEO execution, AI search optimization, platforms, and product delivery across full-stack engineering.',
     images: ['/images/profile/stephan-profile.jpg'],
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  interactiveWidget: 'resizes-content',
 };
 
 export default function RootLayout({

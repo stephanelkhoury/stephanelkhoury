@@ -43,15 +43,15 @@ const pillars = [
 
 export default function PremiumSeoExpertise({ faqs }: SeoExpertiseProps) {
   return (
-    <section id="seo-expertise" className="py-24 bg-white dark:bg-zinc-950 border-t border-zinc-200/50 dark:border-zinc-900/50">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="max-w-3xl mx-auto text-center mb-16">
+    <section id="seo-expertise" className="py-16 md:py-24 bg-white dark:bg-zinc-950 border-t border-zinc-200/50 dark:border-zinc-900/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
+        <div className="max-w-3xl mx-auto text-center mb-10 md:mb-16">
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <h2 className="text-sm font-semibold text-emerald-500 uppercase tracking-widest mb-3">SEO Expertise</h2>
-            <h3 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white tracking-tight mb-5">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white tracking-tight mb-5">
               SEO expert and AI search engine expert for modern brands.
             </h3>
-            <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed">
+            <p className="text-zinc-600 dark:text-zinc-400 text-base sm:text-lg leading-relaxed">
               I combine technical SEO, AEO, GEO, performance engineering, and content structure so websites can rank in classic search, qualify for rich results, and stay visible in AI-generated answers.
             </p>
           </motion.div>
@@ -67,12 +67,12 @@ export default function PremiumSeoExpertise({ faqs }: SeoExpertiseProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.08 }}
-                className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/50 p-8"
+                className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/50 p-6 sm:p-8"
               >
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-5">
                   <Icon className="w-6 h-6 text-emerald-500" />
                 </div>
-                <h4 className="text-2xl font-bold text-zinc-900 dark:text-white mb-3">{pillar.title}</h4>
+                <h4 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white mb-3">{pillar.title}</h4>
                 <p className="text-zinc-700 dark:text-zinc-400 leading-relaxed mb-5">{pillar.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {pillar.points.map((point) => (
@@ -95,10 +95,10 @@ export default function PremiumSeoExpertise({ faqs }: SeoExpertiseProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-gradient-to-br from-emerald-500/[0.08] via-transparent to-cyan-500/[0.08] p-8"
+            className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-gradient-to-br from-emerald-500/[0.08] via-transparent to-cyan-500/[0.08] p-6 sm:p-8"
           >
             <p className="text-xs uppercase tracking-[0.28em] text-emerald-500 mb-4">Search Coverage</p>
-            <h4 className="text-3xl font-bold text-zinc-900 dark:text-white mb-5">From traditional SEO to AI answer engines.</h4>
+            <h4 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white mb-5">From traditional SEO to AI answer engines.</h4>
             <p className="text-zinc-700 dark:text-zinc-400 leading-relaxed mb-6">
               The goal is not just rankings. It is discoverability across search results, rich snippets, AI overviews, conversational engines, and answer-first interfaces where users increasingly make decisions.
             </p>
@@ -114,10 +114,10 @@ export default function PremiumSeoExpertise({ faqs }: SeoExpertiseProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/50 p-8"
+            className="rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/50 p-6 sm:p-8"
           >
             <p className="text-xs uppercase tracking-[0.28em] text-blue-500 mb-4">FAQ</p>
-            <h4 className="text-3xl font-bold text-zinc-900 dark:text-white mb-6">Common SEO and AI search questions.</h4>
+            <h4 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white mb-6">Common SEO and AI search questions.</h4>
             <div className="space-y-4">
               {faqs.map((faq) => (
                 <div key={faq.question} className="rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white/70 dark:bg-zinc-950/50 p-5">

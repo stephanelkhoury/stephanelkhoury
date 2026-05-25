@@ -93,7 +93,6 @@ html.lenis {
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
 }
 
 /* Custom scrollbar styles for modals */
@@ -118,8 +117,6 @@ html.lenis {
 
 /* Firefox scrollbar styling */
 .modal-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
 }
 
 body {
@@ -131,6 +128,17 @@ body {
     radial-gradient(circle at 85% 12%, rgba(6, 182, 212, 0.06), transparent 30%),
     radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.05), transparent 35%);
   transition: background 0.3s ease, color 0.3s ease;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-padding-top: 84px;
 }
 
 /* Light mode body overrides */
@@ -165,6 +173,15 @@ section {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.hero-spotlight {
+  background: radial-gradient(70% 50% at 50% 10%, rgba(29, 78, 216, 0.16), transparent 70%);
+}
+
+.hero-grid-overlay {
+  background-image: linear-gradient(#3f3f46 1px, transparent 1px), linear-gradient(90deg, #3f3f46 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 /* Line clamp utilities */
@@ -276,6 +293,7 @@ section {
 /* Glass morphism effect */
 .glass {
   background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -321,6 +339,7 @@ section {
   position: relative;
   width: 100%;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
@@ -365,6 +384,39 @@ section {
   filter: grayscale(0) brightness(1.08);
   opacity: 1;
   transform: scale(1.08);
+}
+
+@media (max-width: 768px) {
+  .logo-marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .logo-marquee-track {
+    gap: 0.75rem;
+    animation-duration: 28s;
+  }
+
+  .logo-pill {
+    width: 72px;
+    height: 72px;
+  }
+
+  .logo-pill-image {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @keyframes loadingPulse {

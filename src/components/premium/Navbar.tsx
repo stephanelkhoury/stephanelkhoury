@@ -73,10 +73,26 @@ export default function PremiumNavbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isOpen]);
+
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-zinc-950/85 backdrop-blur-md border-b border-zinc-300/70 dark:border-zinc-800/60 py-4' : 'bg-white/85 dark:bg-transparent backdrop-blur-sm border-b border-zinc-300/60 dark:border-transparent py-4'}`}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        <a href="#" className="text-xl font-bold tracking-tighter text-zinc-900 dark:text-zinc-100">
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-zinc-950/85 backdrop-blur-md border-b border-zinc-300/70 dark:border-zinc-800/60 py-3 md:py-4' : 'bg-white/85 dark:bg-transparent backdrop-blur-sm border-b border-zinc-300/60 dark:border-transparent py-3 md:py-4'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between">
+        <a href="#" className="text-lg sm:text-xl font-bold tracking-tighter text-zinc-900 dark:text-zinc-100">
           STEPHAN<span className="text-blue-500">.</span>EK
         </a>
 
@@ -96,7 +112,11 @@ export default function PremiumNavbar() {
         {/* Mobile */}
         <div className="flex items-center gap-3 md:hidden">
           <ThemeToggle />
-          <button className="text-zinc-700 dark:text-zinc-300" onClick={() => setIsOpen((v) => !v)}>
+          <button
+            className="h-11 w-11 rounded-full border border-zinc-300 dark:border-zinc-700/60 bg-zinc-100/80 dark:bg-zinc-900/80 text-zinc-700 dark:text-zinc-300 flex items-center justify-center"
+            onClick={() => setIsOpen((v) => !v)}
+            aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -109,13 +129,20 @@ export default function PremiumNavbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-zinc-950 border-b border-zinc-300 dark:border-zinc-800 p-6 flex flex-col gap-4"
+            className="md:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-300 dark:border-zinc-800 px-4 pb-6 pt-4 flex flex-col gap-1 max-h-[calc(100vh-70px)] overflow-y-auto"
           >
             {navLinks.map((link) => (
-              <a key={link.name} href={link.href} className="text-lg font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-500 dark:hover:text-blue-400" onClick={() => setIsOpen(false)}>
+              <a key={link.name} href={link.href} className="text-base font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-500 dark:hover:text-blue-400 py-3 px-2 rounded-lg" onClick={() => setIsOpen(false)}>
                 {link.name}
               </a>
             ))}
+            <a
+              href="#contact"
+              className="mt-2 inline-flex items-center justify-center px-5 py-3 rounded-full bg-blue-600 text-white font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              Let&apos;s Talk
+            </a>
           </motion.div>
         )}
       </AnimatePresence>
