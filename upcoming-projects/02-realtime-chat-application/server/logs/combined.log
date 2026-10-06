@@ -881,3 +881,7 @@
 {"level":"info","message":"User joined 1 chat rooms","service":"chat-server","timestamp":"2025-06-08 03:32:39"}
 {"level":"info","message":"User 6843884cf2b530bdfb4da568 status updated to away","service":"chat-server","timestamp":"2025-06-08 03:43:10"}
 {"level":"info","message":"User 684388c9f2b530bdfb4da579 status updated to away","service":"chat-server","timestamp":"2025-06-08 03:43:10"}
+{"level":"warn","message":"GIPHY_API_KEY not set - GIF functionality will be limited","service":"chat-server","timestamp":"2025-11-03 19:30:55"}
+{"level":"info","message":"Chat server running on port 5050","service":"chat-server","timestamp":"2025-11-03 19:30:56"}
+{"level":"info","message":"Environment: development","service":"chat-server","timestamp":"2025-11-03 19:30:56"}
+{"level":"info","message":"Connected to MongoDB successfully","service":"chat-server","timestamp":"2025-11-03 19:30:56"}
