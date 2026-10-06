@@ -100,7 +100,7 @@ export default function LiveChatWidget() {
     }
   }, [messages, open]);
 
-  if (pathname.startsWith('/admin')) {
+  if (pathname?.startsWith('/admin')) {
     return null;
   }
 

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 export default function SiteAura() {
   const pathname = usePathname();
-  const hidden = pathname.startsWith('/admin');
+  const hidden = pathname?.startsWith('/admin') ?? false;
 
   const particles = useMemo(
     () =>
