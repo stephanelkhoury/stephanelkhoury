@@ -10,3 +10,6 @@ prisma/dev.db-journal
 
 # Isolated local verification builds
 .next-*/
+
+*.tsbuildinfo
+.claude/
