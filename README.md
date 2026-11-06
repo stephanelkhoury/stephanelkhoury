@@ -88,6 +88,7 @@ to use existing details; use an empty array to hide a detail list. Use only veri
 ## Full Documentation
 
 - Detailed DB/Vercel/local runbook: [docs/DB-VERCEL-LOCAL-SETUP.md](docs/DB-VERCEL-LOCAL-SETUP.md)
+- Multigraphic AI product and implementation records: [docs/product.md](docs/product.md), [docs/product-brief.md](docs/product-brief.md), [docs/architecture.md](docs/architecture.md), [docs/world-design.md](docs/world-design.md), [docs/agent-system.md](docs/agent-system.md), [docs/data-model.md](docs/data-model.md), [docs/implementation-plan.md](docs/implementation-plan.md), [docs/decisions.md](docs/decisions.md), [docs/progress.md](docs/progress.md), and [docs/multigraphic-ai-readiness.md](docs/multigraphic-ai-readiness.md), and [docs/company-upgrade.md](docs/company-upgrade.md)
 
 ## Project Structure
 

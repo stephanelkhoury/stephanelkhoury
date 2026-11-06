@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminSessionEdge } from '@/lib/admin-session-edge';
 
 const ADMIN_SESSION_COOKIE = 'admin_session';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (!pathname.startsWith('/admin')) {
@@ -16,7 +17,7 @@ export function middleware(request: NextRequest) {
   const token = process.env.ADMIN_DASHBOARD_TOKEN;
   const session = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 
-  if (!token || session !== token) {
+  if (!token || !await verifyAdminSessionEdge(session, token)) {
     const signInUrl = request.nextUrl.clone();
     signInUrl.pathname = '/admin/sign-in';
     signInUrl.searchParams.set('next', pathname);

@@ -10,6 +10,9 @@ const links = [
   { href: '/admin/full-site', label: 'Full Site Editor' },
   { href: '/admin/sections', label: 'Sections' },
   { href: '/admin/projects', label: 'Projects' },
+  { href: '/admin/multigraphic-ai', label: 'Multigraphic AI' },
+  { href: '/admin/multigraphic-ai/agents', label: 'Agent Registry' },
+  { href: '/admin/multigraphic-ai/knowledge', label: 'Knowledge' },
   { href: '/admin/systems', label: 'Systems' },
   { href: '/admin/certificates', label: 'Certificates' },
   { href: '/admin/blob', label: 'Blob Storage' },
@@ -24,7 +27,6 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
 
   useEffect(() => {
     if (pathname === '/admin/sign-in') {
-      setChecking(false);
       return;
     }
 
@@ -56,6 +58,10 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
     return <div className="min-h-screen flex items-center justify-center bg-[#0b1220] text-gray-300">Checking session...</div>;
   }
 
+  if (pathname?.startsWith('/admin/multigraphic-ai')) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen grid md:grid-cols-[270px_1fr] bg-[#0b1220] text-slate-100">
       <aside className="border-r border-slate-700/60 p-4 md:p-6 bg-[#0f172a]">
@@ -66,7 +72,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
 
         <nav className="space-y-2">
           {links.map((item) => {
-            const active = pathname === item.href;
+            const active = pathname === item.href || (item.href === '/admin/multigraphic-ai' && pathname?.startsWith(`${item.href}/`));
             return (
               <Link
                 key={item.href}

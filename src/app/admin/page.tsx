@@ -2,6 +2,11 @@ import Link from 'next/link';
 
 const cards = [
   {
+    href: '/admin/multigraphic-ai',
+    title: 'Multigraphic AI Headquarters',
+    description: 'Open the company dashboard for departments, people, projects, agents, knowledge, and delivery workflows.',
+  },
+  {
     href: '/admin/full-site',
     title: 'Full Site Editor',
     description: 'Edit the entire website payload (blocks, projects, systems, certificates) from one JSON CMS.',

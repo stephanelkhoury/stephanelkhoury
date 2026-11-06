@@ -1,0 +1,2 @@
+ALTER TABLE "WorkflowRun"
+  ADD COLUMN "revisionCount" INTEGER NOT NULL DEFAULT 0;

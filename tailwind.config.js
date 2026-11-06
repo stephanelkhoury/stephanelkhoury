@@ -16,6 +16,8 @@ module.exports = {
         success: 'var(--accent-success)',
         muted: 'var(--muted)',
         surface: 'var(--surface)',
+        // Multigraphic operations design tokens; values come from theme.css per light/dark theme.
+        ops: Object.fromEntries(['bg', 'surface', 'surface-raised', 'border', 'border-strong', 'text', 'muted', 'subtle', 'accent', 'accent-strong', 'on-accent', 'blue', 'violet', 'green', 'amber', 'red'].map(name => [name, `rgb(var(--ops-${name}-rgb) / <alpha-value>)`])),
       },
       backgroundColor: {
         card: 'var(--card-bg)',

@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenAI } from '@google/genai';
 import { prisma } from '@/lib/prisma';
 import { getPublicContent } from '@/lib/bootstrap';
 import { featuredProjectCopy, featuredProjectSlugs } from '@/lib/featured-projects';
+import { readBoundedJsonBody } from '@/lib/bounded-json-body';
+import { consumeRateLimit } from '@/lib/rate-limit';
+import { rateLimitClientKey } from '@/lib/operations/rate-limit-memory';
+import { defaultModelForProvider, generateText, isModelProviderConfigured, ModelProviderError, resolveModelProvider } from '@/lib/operations/model-provider';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
+
+const chatBodySchema = z.object({
+  message: z.string().trim().min(1).max(4000),
+  sessionId: z.string().trim().min(1).max(128).nullable().optional(),
+  visitorId: z.string().trim().min(1).max(160).optional(),
+}).passthrough();
 
 export async function POST(request: NextRequest) {
   if (!process.env.DATABASE_URL) {
@@ -14,21 +24,24 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const body = await request.json();
-  const message = String(body.message || '').trim();
-  const sessionId = body.sessionId ? String(body.sessionId) : null;
-  const visitorId = String(body.visitorId || 'anonymous');
+  const parsedBody = await readBoundedJsonBody(request.body, 16_384);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.reason === 'too-large' ? 'Chat request is too large.' : 'Request body must be valid JSON.' }, { status: parsedBody.reason === 'too-large' ? 413 : 400 });
+  const parsed = chatBodySchema.safeParse(parsedBody.value);
+  if (!parsed.success) return NextResponse.json({ error: 'Provide a message with at most 4,000 characters.' }, { status: 400 });
+  const { message } = parsed.data;
+  const sessionId = parsed.data.sessionId || null;
+  const visitorId = parsed.data.visitorId || 'anonymous';
 
-  if (!message) {
-    return NextResponse.json({ error: 'Message is required' }, { status: 400 });
-  }
+  const rateLimit = await consumeRateLimit(rateLimitClientKey(request, 'portfolio-chat'), 20, 15 * 60 * 1000);
+  if (rateLimit.storage === 'unavailable') return NextResponse.json({ error: 'Chat rate-limit protection is unavailable.' }, { status: 503 });
+  if (!rateLimit.allowed) return NextResponse.json({ error: 'Too many chat requests. Try again later.' }, { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } });
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: 'Gemini API key is missing. Add GEMINI_API_KEY in Vercel env vars.' },
-      { status: 500 }
-    );
+  let provider;
+  try { provider = resolveModelProvider(process.env.PORTFOLIO_CHAT_PROVIDER || 'gemini'); }
+  catch { return NextResponse.json({ error: 'PORTFOLIO_CHAT_PROVIDER must be gemini, anthropic, or openai.' }, { status: 500 }); }
+  if (!isModelProviderConfigured(provider)) {
+    const keyName = provider === 'anthropic' ? 'ANTHROPIC_API_KEY' : provider === 'openai' ? 'OPENAI_API_KEY' : 'GEMINI_API_KEY';
+    return NextResponse.json({ error: `${provider} is not configured. Set ${keyName} on the server.` }, { status: 503 });
   }
 
   const [content, chatSession] = await Promise.all([
@@ -106,27 +119,20 @@ ${systemsText}
 ---
 Visitor question: ${message}`;
 
-  const ai = new GoogleGenAI({ apiKey });
-
-  const MODELS = ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-3.1-flash-lite'];
+  const configuredModel = process.env.PORTFOLIO_CHAT_MODEL?.trim();
+  const models = provider === 'gemini' && !configuredModel
+    ? ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-3.1-flash-lite']
+    : [configuredModel || defaultModelForProvider(provider)];
   let answer = '';
   let degraded = false;
 
-  for (const model of MODELS) {
+  for (const model of models) {
     try {
-      const response = await ai.models.generateContent({ model, contents: prompt });
-      answer = response.text || '';
+      const response = await generateText({ provider, model, prompt, maxOutputTokens: 900 });
+      answer = response.text;
       if (answer) break;
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.error(`[chat] model ${model} failed:`, msg);
-      const shouldTryFallback =
-        msg.includes('429') ||
-        msg.includes('quota') ||
-        msg.includes('503') ||
-        msg.includes('overloaded') ||
-        msg.includes('404') ||
-        msg.includes('NOT_FOUND');
+    } catch (error) {
+      const shouldTryFallback = provider === 'gemini' && error instanceof ModelProviderError && [404, 429, 503].includes(error.status ?? 0);
       if (!shouldTryFallback) break;
     }
   }
