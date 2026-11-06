@@ -176,6 +176,27 @@ export default function OperationsRunsPanel({ projectId, brief }: { projectId: s
     }
   };
 
+  const combineFinalSolution = async () => {
+    setWorking(true);
+    setError('');
+    setNotice('');
+    try {
+      const response = await fetch(`/api/admin/operations/projects/${encodeURIComponent(projectId)}/final-solution`, { method: 'POST' });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Final solution could not be drafted.');
+      if (data.run) {
+        setRuns((current) => [data.run as WorkflowRun, ...current.filter((run) => run.id !== data.run.id)]);
+        setSelectedRunId(data.run.id);
+      }
+      setNotice(`Final solution draft prepared from ${data.combined} finished task(s). Review and accept it to run.`);
+      await loadRuns();
+    } catch (combineError) {
+      setError(combineError instanceof Error ? combineError.message : 'Final solution could not be drafted.');
+    } finally {
+      setWorking(false);
+    }
+  };
+
   const acceptPlan = async () => {
     if (!selectedRun) return;
     setWorking(true);
@@ -274,6 +295,10 @@ export default function OperationsRunsPanel({ projectId, brief }: { projectId: s
       </div>
       {workflowKey === 'department-planning-v1' && <label className="block space-y-2 text-sm text-ops-text"><span>Department specialist</span><select value={departmentAgentKey} onChange={event => setDepartmentAgentKey(event.target.value)} className="min-h-11 w-full border border-ops-border-strong bg-ops-bg px-3"><option value="">Choose an enabled specialist</option>{departmentAgents.filter(agent => agent.enabled && agent.latestVersion?.department !== 'SOFTWARE_ENGINEERING').map(agent => <option key={agent.key} value={agent.key}>{agent.name}</option>)}</select><span className="block text-xs text-ops-subtle">Approve and check a contract, then enable assignment. Preparing a draft makes no model call; execution begins after acceptance.</span></label>}
       {brief.trim().length < 30 && <p className="text-xs text-ops-amber">Save a project brief with at least 30 characters before planning.</p>}
+      <div className="flex flex-wrap items-center gap-3">
+        <button type="button" onClick={() => void combineFinalSolution()} disabled={working || loading || brief.trim().length < 30} className="inline-flex min-h-11 items-center gap-2 border border-ops-border-strong px-4 text-sm font-semibold text-ops-text hover:bg-ops-accent/10 disabled:cursor-not-allowed disabled:opacity-50"><Sparkles size={16} /> Combine into final solution</button>
+        <span className="text-xs text-ops-subtle">The Project Manager merges every finished task into one answer for your review.</span>
+      </div>
 
       {loading ? <p role="status" className="py-4 text-sm text-ops-muted">Loading workflow runs…</p> : runs.length > 0 ? (
         <div className="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)]">

@@ -12,4 +12,5 @@ prisma/dev.db-journal
 .next-*/
 
 *.tsbuildinfo
+backups/
 .claude/
