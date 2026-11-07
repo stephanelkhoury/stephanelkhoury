@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import OperationsShell from '@/components/operations/OperationsShell';
 import './operations.css';
 import './theme.css';
+import './hq-studio.css';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },

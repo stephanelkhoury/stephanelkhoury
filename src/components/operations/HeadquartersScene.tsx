@@ -236,8 +236,8 @@ function World({ props }: { props: Props }) {
   const building = props.sceneView === 'building';
   const evening = props.lighting === 'evening';
   return <ArchitectureMaterials>
-    <color attach="background" args={[evening ? '#303c40' : '#e6e4dc']} />
-    <fog attach="fog" args={[evening ? '#303c40' : '#e6e4dc', 350, 700]} />
+    <color attach="background" args={[evening ? '#1b2040' : '#e8ecf4']} />
+    <fog attach="fog" args={[evening ? '#1b2040' : '#e8ecf4', 350, 700]} />
     <hemisphereLight args={[evening ? '#b7c6da' : '#e8edf3', evening ? '#646055' : '#9a9789', evening ? 0.55 : 1.2]} />
     <ambientLight intensity={evening ? 0.3 : 0.5} />
     <directionalLight position={[-25, 35, 18]} intensity={evening ? 1.1 : 3.4} color={evening ? '#e8a36c' : '#fff1d8'} castShadow={props.quality === 'standard'} shadow-mapSize={[2048, 2048]} shadow-camera-left={-36} shadow-camera-right={36} shadow-camera-top={32} shadow-camera-bottom={-32} shadow-camera-far={100} shadow-normalBias={0.035} shadow-bias={-0.0001} />
