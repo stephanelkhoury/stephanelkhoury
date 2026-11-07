@@ -30,7 +30,7 @@ Hold production enablement. The single-owner website workflow and bounded depart
 - The admin token remains a shared single-owner bootstrap credential, not client authentication.
 - The configured managed database was not read or changed during this verification.
 - No production deployment, worker deployment, data migration, or external publishing was performed.
-- The existing fictional demo data is not evidence of a successful generation or delivery; Gemini has not yet produced a plan in the current demo.
+- Only real saved records are shown. No generation or delivery is claimed until a real run has produced it.
 - The local `.env` attachment exposed database, Gemini, and admin credentials in conversation context. Rotate these credentials before further use; no values are repeated here.
 
 ## Headquarters Scope Update

@@ -4,7 +4,7 @@ import { isAdminRequest } from '@/lib/admin-auth';
 export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
-  if (!isAdminRequest(request)) {
+  if (!(await isAdminRequest(request))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

@@ -125,6 +125,14 @@ body {
   overflow-x: hidden;
 }
 
+/* `hidden` turns body into a scroll container and breaks position: sticky; `clip` does not. */
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+}
+
 html {
   scroll-padding-top: 84px;
 }

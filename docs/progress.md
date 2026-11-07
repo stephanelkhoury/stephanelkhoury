@@ -47,7 +47,7 @@ Updated: 2026-11-06
 - Browser project create/edit/reload persisted the project and updated summary in the disposable local database.
 - Local browser exercised agent draft-version creation/approval/supersession, knowledge text draft creation/reload/approval/search, `401` unauthenticated access, invalid agent/scope/status responses, and 375px agent/knowledge layouts with no horizontal overflow.
 - Upload errors were verified: unsupported extension returns `415`; supported file upload returns a clear `503` because private Blob credentials/store are disconnected in this environment.
-- Local Multigraphic demo server runs at `http://localhost:3333` against only the labeled fictional demo database; the configured managed Neon database was not read or changed.
+- The local server runs at `http://localhost:3333` against a local PostgreSQL database; the managed Neon database is only touched when explicitly requested.
 - The configured managed Neon database was never migrated or seeded.
 - Fresh-install migrations and the existing-install legacy-baseline upgrade path both applied successfully to disposable local PostgreSQL databases; test-only databases are removed after verification while the labeled local demo is retained.
 - `npm run test:operations` passed 25 tests with no skips against the disposable local database, including run idempotency, JSONB-stable approval hashes, tool-call idempotency, usage basis, plan DAG validation, exact-approval gates, scope isolation, budget checks, cancellation, and lease recovery.

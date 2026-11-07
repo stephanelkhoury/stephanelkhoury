@@ -1,73 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_SESSION_COOKIE } from '@/lib/admin-auth';
-import { ADMIN_SESSION_TTL_SECONDS, constantTimeStringEqual, createAdminSession, isAllowedAdminMutationOrigin } from '@/lib/admin-session';
-import { readBoundedJsonBody } from '@/lib/bounded-json-body';
-import { consumeRateLimit } from '@/lib/rate-limit';
-import { rateLimitClientKey } from '@/lib/operations/rate-limit-memory';
+import { z } from 'zod';
+import { prisma } from '@/lib/prisma';
+import { fail, readAuthBody } from '@/lib/auth/http';
+import { verifyPassword } from '@/lib/auth/password';
+import { createSession, SESSION_COOKIE, SESSION_TTL_SECONDS } from '@/lib/auth/session';
+import { unseal } from '@/lib/auth/crypto';
+import { verifyTotp } from '@/lib/auth/totp';
+import { WORKSPACE_SLUG } from '@/lib/auth/context';
 
 export const runtime = 'nodejs';
 
-function normalizeAdminToken(value: string | undefined) {
-  if (!value) return '';
-  let normalized = value.trim();
-  if (
-    (normalized.startsWith('"') && normalized.endsWith('"')) ||
-    (normalized.startsWith("'") && normalized.endsWith("'"))
-  ) {
-    normalized = normalized.slice(1, -1).trim();
-  }
-  return normalized;
-}
+const schema = z.object({ email: z.string().trim().toLowerCase().email().max(200), password: z.string().min(1).max(200), code: z.string().max(12).optional() }).strict();
+const MAX_FAILURES = 5;
+const LOCK_MINUTES = 15;
+const INVALID = 'Invalid email or password.';
 
 export async function POST(request: NextRequest) {
-  const contentLength = Number(request.headers.get('content-length') ?? 0);
-  if (contentLength > 4096) return NextResponse.json({ error: 'Login request is too large.' }, { status: 413 });
-  const host = request.headers.get('x-forwarded-host')?.split(',')[0]?.trim() || request.headers.get('host');
-  const protocolHeader = request.headers.get('x-forwarded-proto')?.split(',')[0]?.trim();
-  const protocol = protocolHeader ? (protocolHeader.endsWith(':') ? protocolHeader : `${protocolHeader}:`) : request.nextUrl.protocol;
-  if (!isAllowedAdminMutationOrigin({
-    origin: request.headers.get('origin'),
-    requestHost: host,
-    requestProtocol: protocol,
-    fetchSite: request.headers.get('sec-fetch-site'),
-  })) {
-    return NextResponse.json({ error: 'Cross-origin sign-in is not allowed.' }, { status: 403 });
+  const input = await readAuthBody(request, schema, { scope: 'auth-login', max: 20 });
+  if ('error' in input) return input.error;
+  const { email, password, code } = input.data;
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    const passwordOk = await verifyPassword(password, user?.passwordHash);
+    if (!user || !user.passwordHash || user.disabledAt) return fail(INVALID, 401);
+    if (user.lockedUntil && user.lockedUntil > new Date()) return fail('This account is temporarily locked after too many attempts. Try again in a few minutes or reset your password.', 423);
+
+    const recordFailure = async () => {
+      const failures = user.failedLoginCount + 1;
+      await prisma.user.update({ where: { id: user.id }, data: { failedLoginCount: failures, lockedUntil: failures >= MAX_FAILURES ? new Date(Date.now() + LOCK_MINUTES * 60_000) : null } });
+    };
+    if (!passwordOk) { await recordFailure(); return fail(INVALID, 401); }
+
+    if (user.totpEnabledAt && user.totpSecret) {
+      if (!code) return NextResponse.json({ needsCode: true });
+      if (!verifyTotp(unseal(user.totpSecret), code)) { await recordFailure(); return fail('That code is not valid. Check your authenticator app.', 401); }
+    }
+
+    const membership = await prisma.membership.findFirst({ where: { userId: user.id, status: 'ACTIVE', workspace: { slug: WORKSPACE_SLUG } }, select: { role: true } });
+    if (!membership) return fail('This account has no access to the workspace.', 403);
+
+    await prisma.user.update({ where: { id: user.id }, data: { failedLoginCount: 0, lockedUntil: null, lastLoginAt: new Date() } });
+    const session = await createSession(user.id, request.headers);
+    const response = NextResponse.json({ success: true, user: { email: user.email, name: user.name, role: membership.role } });
+    response.cookies.set({ name: SESSION_COOKIE, value: session.cookieValue, httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: SESSION_TTL_SECONDS });
+    return response;
+  } catch {
+    return fail('Sign-in is temporarily unavailable.', 503);
   }
-
-  const token = normalizeAdminToken(process.env.ADMIN_DASHBOARD_TOKEN);
-  if (!token) {
-    return NextResponse.json({ error: 'ADMIN_DASHBOARD_TOKEN is not configured.' }, { status: 500 });
-  }
-
-  const limit = await consumeRateLimit(rateLimitClientKey(request, 'admin-login'), 10, 15 * 60 * 1000);
-  if (limit.storage === 'unavailable') return NextResponse.json({ error: 'Sign-in protection is unavailable.' }, { status: 503 });
-  if (!limit.allowed) return NextResponse.json({ error: 'Too many sign-in attempts. Try again later.' }, { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } });
-
-  const parsedBody = await readBoundedJsonBody(request.body, 4096);
-  if (!parsedBody.ok && parsedBody.reason === 'too-large') {
-    return NextResponse.json({ error: 'Login request is too large.' }, { status: 413 });
-  }
-  if (!parsedBody.ok) {
-    return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
-  }
-  const body = parsedBody.value;
-  const password = normalizeAdminToken(String(typeof body === 'object' && body !== null && 'password' in body ? body.password || '' : ''));
-
-  if (!password || !constantTimeStringEqual(password, token)) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  }
-
-  const session = createAdminSession(token);
-  const response = NextResponse.json({ success: true });
-  response.cookies.set({
-    name: ADMIN_SESSION_COOKIE,
-    value: session.value,
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: ADMIN_SESSION_TTL_SECONDS,
-  });
-
-  return response;
 }

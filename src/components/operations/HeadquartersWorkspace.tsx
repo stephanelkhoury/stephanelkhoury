@@ -3,14 +3,13 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Component, useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
-import { Activity, ArrowRight, BookOpen, Building2, CheckCircle2, CircleAlert, FilePlus2, FileText, FlaskConical, List, LoaderCircle, MessageSquareText, Monitor, RefreshCw, RotateCcw, UserRound, X } from 'lucide-react';
+import { Activity, ArrowRight, BookOpen, Building2, CheckCircle2, CircleAlert, FilePlus2, FileText, List, LoaderCircle, MessageSquareText, Monitor, RefreshCw, RotateCcw, UserRound, X } from 'lucide-react';
 import { presenceLabel, type WorldPoint } from '@/lib/operations/headquarters-model';
 import { roomArrivalPoint } from '@/lib/operations/company-navigation';
 import { companyFloors, departmentForRoom, floorForRoom, type HeadquartersView } from '@/lib/operations/company-catalog';
 import { ArrowDownLeft, Building, ChevronRight, Layers3, Map, Moon, MousePointer2, Plus, Sun, Tags, UsersRound, ZoomIn } from 'lucide-react';
 import { roomArchitecture } from '@/lib/operations/headquarters-architecture';
 import type { HeadquartersCharacter } from '@/lib/operations/headquarters-types';
-import { headquartersDemoProfiles } from '@/lib/operations/headquarters-demo-data';
 
 const HeadquartersScene = dynamic(() => import('./HeadquartersScene'), {
   ssr: false,
@@ -67,12 +66,10 @@ function CharacterButton({ character, selected, onClick }: { character: Headquar
 
 function InteractionPanel({
   character,
-  demoMode,
   onClose,
   onRefresh,
 }: {
   character: HeadquartersCharacter;
-  demoMode: boolean;
   onClose: () => void;
   onRefresh: () => void;
 }) {
@@ -140,9 +137,9 @@ function InteractionPanel({
         <p className="hq-current-task">{task?.title ?? 'No current assignment recorded.'}</p>
         {task?.project && <p className="hq-muted-line">{task.project.name} · Saved task status: {labelStatus(task.status)}</p>}
         {task?.blocker && <p className="hq-blocker"><CircleAlert size={15} />{task.blocker}</p>}
-        {!character.isOwner && !task && <p className="hq-muted-line">{demoMode ? 'Isolated demo profile. No task or execution record exists.' : `No active task. ${idleMessage}`}</p>}
+        {!character.isOwner && !task && <p className="hq-muted-line">{`No active task. ${idleMessage}`}</p>}
         {task && character.status === 'IN_MEETING' && <p className="hq-muted-line">{idleMessage}</p>}
-        {!demoMode && character.status === 'SLEEPING' && <button type="button" className="hq-text-action" onClick={() => void wake()} disabled={waking}>{waking ? <LoaderCircle size={15} className="hq-spinning" /> : <Activity size={15} />}{waking ? 'Waking up…' : 'Wake up'}</button>}
+        {character.status === 'SLEEPING' && <button type="button" className="hq-text-action" onClick={() => void wake()} disabled={waking}>{waking ? <LoaderCircle size={15} className="hq-spinning" /> : <Activity size={15} />}{waking ? 'Waking up…' : 'Wake up'}</button>}
       </section>
 
       {!character.isOwner && character.agent && <section className="hq-panel-section">
@@ -190,14 +187,14 @@ function InteractionPanel({
 
       <section className="hq-panel-section">
         <h3 className="hq-section-title">Messages</h3>
-        <p className="hq-muted-line">{demoMode ? 'Demo mode has no agent messages or model calls.' : 'No persisted agent messages. Status answers below use saved task data only.'}</p>
-        {!demoMode && <button type="button" className="hq-text-action" onClick={() => setStatusReply(task ? `${character.displayName}: ${labelStatus(task.status)} — ${task.title}.` : `${character.displayName}: no assignment is recorded. ${idleMessage}`)}>
+        <p className="hq-muted-line">{'No persisted agent messages. Status answers below use saved task data only.'}</p>
+        {<button type="button" className="hq-text-action" onClick={() => setStatusReply(task ? `${character.displayName}: ${labelStatus(task.status)} — ${task.title}.` : `${character.displayName}: no assignment is recorded. ${idleMessage}`)}>
           <MessageSquareText size={15} /> Summarize saved status
         </button>}
         {statusReply && <p className="hq-status-reply" aria-live="polite">{statusReply}</p>}
       </section>
 
-      {demoMode ? <p className="hq-demo-panel-note">Actions are disabled in isolated demo mode. No company records are read or changed.</p> : !character.agent ? <p className="hq-demo-panel-note">This is a staff profile, not an AI agent. No task assignment or contact integration is connected.</p> : <section className="hq-panel-actions" aria-label="Employee actions">
+      {!character.agent ? <p className="hq-demo-panel-note">This is a staff profile, not an AI agent. No task assignment or contact integration is connected.</p> : <section className="hq-panel-actions" aria-label="Employee actions">
         <Link href={`/admin/multigraphic-ai/agents/${character.agent.id}`}><UserRound size={16} /> Agent contract & checks</Link>
         <Link href="/admin/multigraphic-ai/projects/new"><FilePlus2 size={16} /> Give a task</Link>
         <Link href="/admin/multigraphic-ai/meetings"><UsersRound size={16} /> Call a meeting</Link>
@@ -221,7 +218,7 @@ export default function HeadquartersWorkspace() {
   const reducedMotion = motionOverride ?? prefersReducedMotion;
   const [data, setData] = useState<HeadquartersData | null>(null);
   const [loading, setLoading] = useState(true); const [error, setError] = useState('');
-  const [reloadKey, setReloadKey] = useState(0); const [demoMode, setDemoMode] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sceneView, setSceneView] = useState<HeadquartersView>('building');
   const [lighting, setLighting] = useState<'day' | 'evening'>('day');
@@ -233,14 +230,13 @@ export default function HeadquartersWorkspace() {
   const [focusedRoom, setFocusedRoom] = useState<string | null>(null);
   const [resetViewKey, setResetViewKey] = useState(0);
   useEffect(() => {
-    if (demoMode) return;
-    const controller = new AbortController();
+        const controller = new AbortController();
     fetch('/api/admin/operations/headquarters', { cache: 'no-store', signal: controller.signal }).then(async response => { const result = await response.json(); if (!response.ok) throw new Error(result.error || 'The employee directory is unavailable.'); return result as HeadquartersData; }).then(result => { setData(result); setError(''); }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'The directory is unavailable.'); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [reloadKey, demoMode]);
-  useEffect(() => { if (demoMode) return; const timer = window.setInterval(() => { if (document.visibilityState === 'visible') setReloadKey(value => value + 1); }, 15000); return () => window.clearInterval(timer); }, [demoMode]);
+  }, [reloadKey]);
+  useEffect(() => { const timer = window.setInterval(() => { if (document.visibilityState === 'visible') setReloadKey(value => value + 1); }, 15000); return () => window.clearInterval(timer); }, []);
   useEffect(() => { const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') { setSelectedId(null); setFocusedRoom(null); } }; window.addEventListener('keydown', escape); return () => window.removeEventListener('keydown', escape); }, []);
-  const profiles = demoMode ? headquartersDemoProfiles : data?.profiles ?? [];
+  const profiles = data?.profiles ?? [];
   const floor = companyFloors.find(floor => floor.key === sceneView) ?? companyFloors[1];
   const floorProfiles = sceneView === 'building' ? profiles : profiles.filter(profile => floorForRoom(profile.roomKey) === sceneView);
   const selected = profiles.find(profile => profile.id === selectedId);
@@ -262,12 +258,12 @@ export default function HeadquartersWorkspace() {
     <div className="studio-stage"><div className="studio-stage-header"><div><p>{sceneView === 'building' ? 'THE COMPANY / ARCHITECTURAL OVERVIEW' : `LEVEL ${floor.number} / ${room ? 'ROOM VIEW' : 'FLOOR VIEW'}`}</p><h2>{sceneView === 'building' ? 'Multigraphic headquarters' : room?.name ?? floor.name}</h2></div><div className="studio-view-controls"><div role="group" aria-label="Experience view"><button onClick={() => setView('world')} aria-pressed={view === 'world'}><Building2 size={14} /> <span>Explore</span></button><button onClick={() => setView('list')} aria-pressed={view === 'list'}><List size={14} /> <span>Directory</span></button></div><button title="Reset floor view" aria-label="Reset floor view" onClick={reset}><RotateCcw size={16} /></button></div></div>
       {view === 'world' ? <div className="studio-canvas"><SceneErrorBoundary fallback={<div className="hq-scene-fallback"><p>The 3D view could not start.</p><button onClick={() => setView('list')}>Open the company directory</button></div>}><HeadquartersScene characters={profiles} destination={destination} sceneView={sceneView} resetViewKey={resetViewKey} reducedMotion={reducedMotion} quality={quality} compact={compact} selectedCharacterId={selectedId} focusedRoom={focusedRoom} lighting={lighting} viewStyle={viewStyle} wayfinding={wayfinding} onSelectFloor={chooseFloor} onSelectCharacter={selectPerson} onSelectRoom={chooseRoom} onMoveTo={point => setDestination(point)} /></SceneErrorBoundary></div> : <div className="studio-directory"><header><p className="company-kicker">COMPANY DIRECTORY</p><h3>{floorProfiles.length} people{sceneView !== 'building' ? ` on Level ${floor.number}` : ' across the company'}</h3></header>{floorProfiles.map(character => <CharacterButton key={character.id} character={character} selected={selectedId === character.id} onClick={() => selectPerson(character.id)} />)}{!floorProfiles.length && <p className="studio-empty">{loading ? 'Loading the directory…' : 'No employee profiles are available on this floor.'}</p>}</div>}
       {view === 'world' && <div className="architecture-controls" aria-label="Architectural view settings"><div role="group" aria-label="Lighting"><button onClick={() => setLighting('day')} aria-pressed={lighting === 'day'}><Sun size={13} /><span>Daylight</span></button><button onClick={() => setLighting('evening')} aria-pressed={lighting === 'evening'}><Moon size={13} /><span>Evening</span></button></div><div role="group" aria-label="Camera view"><button onClick={() => setViewStyle('spatial')} aria-pressed={viewStyle === 'spatial'}><Building2 size={13} /><span>Spatial</span></button><button onClick={() => setViewStyle('plan')} aria-pressed={viewStyle === 'plan'}><Map size={13} /><span>Plan</span></button></div><button className="architecture-label-toggle" onClick={() => setWayfinding(value => !value)} aria-pressed={wayfinding}><Tags size={13} /><span>Labels</span></button></div>}
-      <div className="studio-state-banner">{demoMode ? <><FlaskConical size={14} /><span><strong>Design exploration</strong> · Fictional profiles, no live work</span><button onClick={() => { setDemoMode(false); setSelectedId(null); }}>Exit demo</button></> : error ? <><CircleAlert size={14} /><span>Employee data unavailable</span><button title={error} onClick={() => { setDemoMode(true); setSelectedId(null); }}>Explore demo team <ArrowRight size={12} /></button></> : loading ? <><LoaderCircle size={14} /><span>Loading saved employee records…</span></> : <><span className="studio-connection-dot" /><span>{profiles.length} employee profiles · {data?.execution.connected ? 'Execution connected' : 'Execution not connected'}{data?.meetings?.length ? ` · ${data.meetings.length} meeting${data.meetings.length > 1 ? 's' : ''} in session` : ''}</span><button onClick={() => setReloadKey(value => value + 1)} aria-label="Refresh employees"><RefreshCw size={13} /></button></>}</div>
+      <div className="studio-state-banner">{error ? <><CircleAlert size={14} /><span>Employee data unavailable</span><button title={error} onClick={() => setReloadKey(value => value + 1)}>Retry</button></> : loading ? <><LoaderCircle size={14} /><span>Loading saved employee records…</span></> : <><span className="studio-connection-dot" /><span>{profiles.length} employee profiles · {data?.execution.connected ? 'Execution connected' : 'Execution not connected'}{data?.meetings?.length ? ` · ${data.meetings.length} meeting${data.meetings.length > 1 ? 's' : ''} in session` : ''}</span><button onClick={() => setReloadKey(value => value + 1)} aria-label="Refresh employees"><RefreshCw size={13} /></button></>}</div>
       {!selected && room && <div className="studio-room-card"><span className="company-kicker">{department ? 'A SPACE FOR THE WORK' : 'SHARED COMPANY SPACE'}</span><h3>{room.name}</h3><p>{roomDesign?.intent ?? room.purpose}</p>{roomDesign && <dl className="architecture-room-metrics"><div><dt>Concept area</dt><dd>{Math.round(roomDesign.size[0] * roomDesign.size[1])} <small>m²</small></dd></div><div><dt>Designed places</dt><dd>{roomDesign.capacity.toString().padStart(2, '0')}</dd></div><div><dt>Floor finish</dt><dd className="architecture-finish-name">{roomDesign.finish}</dd></div></dl>}{department && <div className="studio-room-outputs">{department.outputs.map(output => <span key={output}>{output}</span>)}</div>}<footer><button onClick={reset}><ArrowDownLeft size={14} /> Floor view</button>{department && <Link href={`/admin/multigraphic-ai/departments#${department.key}`}>Open department <ArrowRight size={14} /></Link>}{!department && room.key.includes('meeting') && <Link href="/admin/multigraphic-ai/meetings">Meetings <ArrowRight size={14} /></Link>}</footer></div>}
-      {selected && <InteractionPanel character={selected} demoMode={demoMode} onClose={() => setSelectedId(null)} onRefresh={() => setReloadKey(value => value + 1)} />}
+      {selected && <InteractionPanel character={selected} onClose={() => setSelectedId(null)} onRefresh={() => setReloadKey(value => value + 1)} />}
       <div className="studio-stage-bottom"><div><MousePointer2 size={13} /><span>Click a room to step inside</span><i /><span>Drag to orbit · Scroll to zoom</span></div><div><button onClick={() => setQuality(current => current === 'standard' ? 'low' : 'standard')} aria-pressed={quality === 'low'}>{quality === 'low' ? 'Low graphics' : 'High graphics'}</button><button onClick={() => setMotionOverride(!reducedMotion)} aria-pressed={reducedMotion}>{reducedMotion ? 'Motion off' : 'Motion on'}</button></div></div>
     </div></div>
-    <footer className="studio-footer"><span><span className="studio-connection-dot" />{demoMode ? 'ISOLATED DESIGN DEMO' : 'PRIVATE OWNER WORKSPACE'}</span><p>{sceneView === 'delivery' ? 'Design. Build. Review. Deliver.' : sceneView === 'building' ? 'A home for every discipline.' : 'Department spaces are open. Service execution follows configured contracts.'}</p><span>AMMAN · BEIRUT <ArrowRight size={12} /></span></footer>
+    <footer className="studio-footer"><span><span className="studio-connection-dot" />PRIVATE OWNER WORKSPACE</span><p>{sceneView === 'delivery' ? 'Design. Build. Review. Deliver.' : sceneView === 'building' ? 'A home for every discipline.' : 'Department spaces are open. Service execution follows configured contracts.'}</p><span>AMMAN · BEIRUT <ArrowRight size={12} /></span></footer>
   </section>;
 }
 function ArrowUpRightIcon() { return <ArrowRight size={14} className="studio-diagonal-arrow" />; }

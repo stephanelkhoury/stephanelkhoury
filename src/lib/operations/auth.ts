@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MembershipStatus, WorkspaceRole } from '@prisma/client';
-import { isAdminRequest } from '@/lib/admin-auth';
+import { getAuthContext, WORKSPACE_SLUG } from '@/lib/auth/context';
 import { prisma } from '@/lib/prisma';
 
 type OperationsAccessFailure = {
@@ -13,13 +13,23 @@ type OperationsAccessSuccess = {
   ok: true;
   workspaceId: string;
   userId: string;
+  role: WorkspaceRole;
 };
 
 export type OperationsAccess = OperationsAccessFailure | OperationsAccessSuccess;
 
 export async function authorizeOperationsRequest(request: NextRequest): Promise<OperationsAccess> {
-  if (!isAdminRequest(request)) {
-    return { ok: false, status: 401, message: 'Authentication required.' };
+  let context;
+  try {
+    context = await getAuthContext(request);
+  } catch {
+    return { ok: false, status: 503, message: 'The operations database is unavailable.' };
+  }
+  if (!context) return { ok: false, status: 401, message: 'Authentication required.' };
+
+  if (context.kind === 'session') {
+    if (context.role === WorkspaceRole.CLIENT) return { ok: false, status: 403, message: 'Client accounts use the client portal.' };
+    return { ok: true, workspaceId: context.workspaceId!, userId: context.userId!, role: context.role };
   }
 
   const ownerEmail = process.env.MULTIGRAPHIC_OWNER_EMAIL?.trim().toLowerCase();
@@ -37,7 +47,7 @@ export async function authorizeOperationsRequest(request: NextRequest): Promise<
         role: WorkspaceRole.OWNER,
         status: MembershipStatus.ACTIVE,
         user: { email: ownerEmail },
-        workspace: { slug: 'multigraphic-ai' },
+        workspace: { slug: WORKSPACE_SLUG },
       },
       select: { workspaceId: true, userId: true },
     });
@@ -50,7 +60,7 @@ export async function authorizeOperationsRequest(request: NextRequest): Promise<
       };
     }
 
-    return { ok: true, ...membership };
+    return { ok: true, ...membership, role: WorkspaceRole.OWNER };
   } catch {
     return { ok: false, status: 503, message: 'The operations database is unavailable.' };
   }

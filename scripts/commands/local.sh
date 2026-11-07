@@ -8,6 +8,9 @@ LOCAL_DB="${LOCAL_DB:-multigraphic_ai_local}"
 LOCAL_DB_USER="${LOCAL_DB_USER:-$(whoami)}"
 DB_URL="postgresql://${LOCAL_DB_USER}@127.0.0.1:5432/${LOCAL_DB}?schema=public"
 OLLAMA_MODEL="${OLLAMA_MODEL:-llama3.1:8b}"
+if [[ -z "${ADMIN_DASHBOARD_TOKEN:-}" && -f "$ROOT_DIR/.env.local" ]]; then
+  ADMIN_DASHBOARD_TOKEN="$(grep -E '^ADMIN_DASHBOARD_TOKEN=' "$ROOT_DIR/.env.local" | head -1 | cut -d= -f2- | tr -d "\"'")"
+fi
 ADMIN_TOKEN="${ADMIN_DASHBOARD_TOKEN:-local-operations-test-token}"
 
 PSQL="$(command -v psql || true)"
@@ -26,9 +29,10 @@ fi
 
 cd "$ROOT_DIR"
 export DATABASE_URL="$DB_URL"
+export MULTIGRAPHIC_OWNER_EMAIL="${MULTIGRAPHIC_OWNER_EMAIL:-info@stephanelkhoury.com}"
 echo "Applying migrations and seed to local database..."
 npx prisma migrate deploy >/dev/null
-MULTIGRAPHIC_OWNER_EMAIL="${MULTIGRAPHIC_OWNER_EMAIL:-info@stephanelkhoury.com}" node prisma/seed-operations.mjs
+node prisma/seed-operations.mjs
 
 if command -v ollama >/dev/null 2>&1; then
   if ! curl -fs http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then

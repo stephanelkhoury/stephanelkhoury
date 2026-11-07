@@ -52,4 +52,4 @@ Required approvals bind to an immutable action payload hash and reviewer members
 
 The first playable floor is the Delivery floor in the existing authenticated Multigraphic workspace. Room geometry and collision footprints share a data-driven layout; movement and animation are transient browser state. `CharacterProfile` stores stable employee identity and location and links to the existing agent contract. Character status is derived from saved task state; when there is no persisted task or worker health signal, employees remain visibly not connected. The old command center remains available at `/admin/multigraphic-ai/overview`.
 
-An opt-in isolated demo is allowed to exercise the world without a service database. Demo profiles have empty task, tool, artifact, and usage histories; workflow actions are removed while demo mode is active. Demo records are never sent to or written into the operations APIs.
+There is no demo mode. The Headquarters shows only saved database records and an error with Retry when they cannot load.

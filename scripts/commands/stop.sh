@@ -4,7 +4,7 @@ set -euo pipefail
 PORT="${PORT:-3333}"
 
 PORT_PIDS="$(lsof -ti tcp:"$PORT" 2>/dev/null || true)"
-DEV_PIDS="$(pgrep -f "next dev --turbopack --port $PORT|npm run dev" || true)"
+DEV_PIDS="$(pgrep -f "next dev .*--port $PORT|npm run dev" || true)"
 PIDS="$(printf "%s\n%s\n" "$PORT_PIDS" "$DEV_PIDS" | sed '/^$/d' | sort -u)"
 
 if [[ -z "$PIDS" ]]; then

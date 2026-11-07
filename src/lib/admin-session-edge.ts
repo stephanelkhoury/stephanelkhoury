@@ -22,3 +22,18 @@ export async function verifyAdminSessionEdge(value: string | undefined, token: s
     return false;
   }
 }
+
+// Signature and expiry only; revoked sessions are rejected by the server-side checks.
+export async function verifyAdminSessionV2Edge(value: string | undefined, secret: string, nowSeconds = Math.floor(Date.now() / 1000)) {
+  if (!value || !secret) return false;
+  const [version, token, expiryText, suppliedSignature, extra] = value.split('.');
+  if (version !== 'v2' || !token || !expiryText || !suppliedSignature || extra !== undefined) return false;
+  const expiresAt = Number(expiryText);
+  if (!Number.isSafeInteger(expiresAt) || expiresAt <= nowSeconds || expiresAt > nowSeconds + SESSION_TTL_SECONDS) return false;
+  try {
+    const key = await crypto.subtle.importKey('raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']);
+    return crypto.subtle.verify('HMAC', key, decodeBase64Url(suppliedSignature), encoder.encode(`${version}.${token}.${expiryText}`));
+  } catch {
+    return false;
+  }
+}

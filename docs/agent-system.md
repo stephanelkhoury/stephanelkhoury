@@ -18,9 +18,9 @@ Employee state maps from the latest persisted task: queued/ready, running/in-pro
 
 Status summaries are generated deterministically from the saved task record. Persisted messages are not implemented; the panel says so rather than inventing conversations. Model responses may provide a concise high-level rationale summary with evidence/source IDs, assumptions, checks performed, and unresolved questions. Private chain-of-thought and hidden deliberation are not requested, stored, or exposed. Give-task, knowledge, review, revision, and cancellation actions are links or calls into existing operations flows, and cancellation is only available for a task with a workflow run ID.
 
-## Demo boundary
+## No demo data
 
-`headquarters-demo-data.ts` supplies a visibly labeled, in-memory fictional directory only. It has no task history, messages, tool calls, artifacts, usage, or enabled tools. The panel removes workflow mutation links in demo mode and polling pauses. Demo profiles are never submitted to the API. Exit demo returns to the persisted directory/error state.
+The Headquarters shows only saved employee records from the database. When they cannot load it shows an error with a Retry action; there is no fictional fallback directory.
 
 ## Execution boundary
 

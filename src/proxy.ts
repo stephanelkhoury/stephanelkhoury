@@ -1,23 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminSessionEdge } from '@/lib/admin-session-edge';
+import { verifyAdminSessionV2Edge } from '@/lib/admin-session-edge';
 
 const ADMIN_SESSION_COOKIE = 'admin_session';
+const PUBLIC_PATHS = new Set(['/admin/sign-in', '/admin/forgot-password', '/admin/reset-password']);
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (!pathname.startsWith('/admin')) {
+  if (!pathname.startsWith('/admin') || PUBLIC_PATHS.has(pathname)) {
     return NextResponse.next();
   }
 
-  if (pathname === '/admin/sign-in') {
-    return NextResponse.next();
-  }
-
-  const token = process.env.ADMIN_DASHBOARD_TOKEN;
+  const secret = (process.env.AUTH_SECRET || process.env.ADMIN_DASHBOARD_TOKEN || '').trim().replace(/^["']|["']$/g, '');
   const session = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 
-  if (!token || !await verifyAdminSessionEdge(session, token)) {
+  if (!secret || !await verifyAdminSessionV2Edge(session, secret)) {
     const signInUrl = request.nextUrl.clone();
     signInUrl.pathname = '/admin/sign-in';
     signInUrl.searchParams.set('next', pathname);

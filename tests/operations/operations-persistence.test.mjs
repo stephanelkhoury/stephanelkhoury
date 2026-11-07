@@ -108,7 +108,7 @@ test('operations persistence, authorization, scope isolation, and agent versioni
 
     if (testBaseUrl) {
       const path = `/api/admin/operations/knowledge?scope=CLIENT&clientId=${clientA.id}&q=${encodeURIComponent(needle)}`;
-      const response = await fetch(new URL(path, testBaseUrl), { headers: { authorization: 'Bearer local-operations-test-token' } });
+      const response = await fetch(new URL(path, testBaseUrl), { headers: { authorization: `Bearer ${process.env.OPERATIONS_TEST_ADMIN_TOKEN ?? 'local-operations-test-token'}` } });
       const result = await response.json();
       assert.equal(response.status, 200);
       assert.equal(result.documents.length, 1);

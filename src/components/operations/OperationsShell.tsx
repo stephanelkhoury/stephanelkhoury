@@ -1,9 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import { Activity, Archive, BadgeCheck, BookOpen, Boxes, Building2, ChartColumnBig, ChartNoAxesCombined, FileText, LayoutDashboard, ListTodo, Layers3, MessagesSquare, Moon, PanelLeftClose, PanelLeftOpen, PlugZap, Plus, Settings2, Sun, UsersRound } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Activity, Archive, BadgeCheck, BookOpen, Boxes, Building2, ChartColumnBig, ChartNoAxesCombined, FileText, LayoutDashboard, ListTodo, Layers3, LogOut, MessagesSquare, Moon, PanelLeftClose, PanelLeftOpen, PlugZap, Plus, Settings2, ShieldCheck, Sun, UserCog, UsersRound } from 'lucide-react';
 
 const navigation = [
   { href: '/admin/multigraphic-ai', label: 'Headquarters', icon: Building2, exact: true },
@@ -22,7 +23,12 @@ const navigation = [
   { href: '/admin/multigraphic-ai/integrations', label: 'Integrations', icon: PlugZap },
   { href: '/admin/multigraphic-ai/usage', label: 'Usage', icon: ChartNoAxesCombined },
   { href: '/admin/multigraphic-ai/activity', label: 'Activity', icon: Activity },
+  { href: '/admin/multigraphic-ai/team', label: 'Team', icon: UserCog, manage: true },
+  { href: '/admin/multigraphic-ai/account', label: 'Account & security', icon: ShieldCheck },
 ];
+
+type Me = { role: string; user: { email: string; name: string } | null };
+const initials = (name?: string) => (name ?? '').split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]?.toUpperCase()).join('') || 'MG';
 
 type Theme = 'light' | 'dark';
 type NavState = 'expanded' | 'collapsed';
@@ -35,6 +41,19 @@ export default function OperationsShell({ children, initialTheme = 'light', init
   const pathname = usePathname() ?? '';
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [nav, setNav] = useState<NavState>(initialNav);
+  const router = useRouter();
+  const [me, setMe] = useState<Me | null>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch('/api/admin/auth/session', { cache: 'no-store', signal: controller.signal }).then(async response => { if (response.ok) setMe(await response.json()); }).catch(() => undefined);
+    return () => controller.abort();
+  }, []);
+  async function signOut() {
+    await fetch('/api/admin/auth/logout', { method: 'POST' });
+    router.push('/admin/sign-in');
+    router.refresh();
+  }
+  const canManage = !me || me.role === 'OWNER' || me.role === 'ADMIN';
   const isActive = (href: string, exact?: boolean) => exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
   const current = navigation.find(item => isActive(item.href, item.exact));
   const fullBleed = pathname === '/admin/multigraphic-ai';
@@ -45,13 +64,13 @@ export default function OperationsShell({ children, initialTheme = 'light', init
   return (
     <div className="operations-shell ops-app" data-theme={theme} data-nav={nav}>
       <a href="#operations-content" className="skip-link">Skip to content</a>
-      <aside className="ops-sidebar" aria-label="Workspace">
+      <aside id="ops-sidebar" className="ops-sidebar" aria-label="Workspace">
         <Link href="/admin/multigraphic-ai" className="ops-brand" aria-label="Multigraphic AI headquarters">
-          <span className="ops-brand-mark" aria-hidden="true">M</span>
+          <Image src="/brand/multigraphic-mark.png" alt="" width={38} height={38} className="ops-brand-logo" priority />
           <span className="ops-brand-copy"><strong>multigraphic <span>/ ai</span></strong><small>Your company, together</small></span>
         </Link>
         <nav className="ops-nav" aria-label="Multigraphic workspace">
-          {navigation.map(({ href, label, icon: Icon, exact }) => (
+          {navigation.filter(item => !('manage' in item) || canManage).map(({ href, label, icon: Icon, exact }) => (
             <Link key={href} href={href} aria-current={isActive(href, exact) ? 'page' : undefined} title={nav === 'collapsed' ? label : undefined}>
               <Icon aria-hidden="true" size={17} strokeWidth={1.8} />
               <span className="ops-nav-label">{label}</span>
@@ -59,15 +78,21 @@ export default function OperationsShell({ children, initialTheme = 'light', init
           ))}
         </nav>
         <div className="ops-sidebar-footer">
-          <span className="ops-owner" aria-label="Owner workspace" title="Owner workspace">SE</span>
-          <button type="button" className="ops-collapse" onClick={toggleNav} aria-label={nav === 'expanded' ? 'Collapse navigation' : 'Expand navigation'} aria-expanded={nav === 'expanded'} title={nav === 'expanded' ? 'Collapse navigation' : 'Expand navigation'}>
-            {nav === 'expanded' ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
-          </button>
+          <div className="ops-user">
+            <span className="ops-owner" aria-hidden="true">{initials(me?.user?.name)}</span>
+            <span className="ops-user-meta"><b>{me?.user?.name ?? 'Workspace'}</b><small>{me?.role ? me.role.toLowerCase() : 'owner'}</small></span>
+          </div>
+          <button type="button" className="ops-signout" onClick={() => void signOut()} aria-label="Sign out" title="Sign out"><LogOut size={16} aria-hidden="true" /></button>
         </div>
       </aside>
       <div className="ops-column">
         <header className="ops-topbar">
-          <p className="ops-breadcrumb">Multigraphic AI <span aria-hidden="true">/</span> <b>{current?.label ?? 'Workspace'}</b></p>
+          <div className="ops-topbar-lead">
+            <button type="button" className="ops-nav-toggle" onClick={toggleNav} aria-label={nav === 'expanded' ? 'Collapse navigation' : 'Expand navigation'} aria-expanded={nav === 'expanded'} aria-controls="ops-sidebar" title={nav === 'expanded' ? 'Collapse navigation' : 'Expand navigation'}>
+              {nav === 'expanded' ? <PanelLeftClose size={17} aria-hidden="true" /> : <PanelLeftOpen size={17} aria-hidden="true" />}
+            </button>
+            <p className="ops-breadcrumb">Multigraphic AI <span aria-hidden="true">/</span> <b>{current?.label ?? 'Workspace'}</b></p>
+          </div>
           <div className="ops-topbar-actions">
             <fieldset className="ops-theme-switch">
               <legend className="sr-only">Theme</legend>
