@@ -9,6 +9,14 @@ const departments = [
   'SEO_CONTENT',
   'MEDIA_PRODUCTION',
   'BUSINESS_OPERATIONS',
+  'ADVERTISING',
+  'SOCIAL_MEDIA',
+  'MARKETING_PERFORMANCE',
+  'GRAPHIC_DESIGN',
+  'MOTION_ANIMATION',
+  'PHOTOGRAPHY',
+  'LANGUAGE_COPY',
+  'FINANCE',
 ] as const;
 
 const knowledgeScopes = [

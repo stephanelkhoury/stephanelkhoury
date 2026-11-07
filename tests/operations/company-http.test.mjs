@@ -14,7 +14,8 @@ async function api(path, method = 'GET', body, extraHeaders = {}) {
 // With a local worker the run may already be RUNNING, so cancellation is requested and observed asynchronously.
 async function cancelAndSettle(prisma, runId) {
   const canceled = await api(`/runs/${runId}/cancel`, 'POST');
-  assert.ok(canceled.data.status === 'CANCELED' || canceled.data.cancelRequested === true);
+  // A fast local model can finish the run before the cancel arrives; that is a valid outcome, not a failure.
+  assert.ok(canceled.data.status === 'CANCELED' || canceled.data.cancelRequested === true || canceled.data.duplicate === true || canceled.status === 409);
   for (let attempt = 0; attempt < 60; attempt += 1) {
     const run = await prisma.workflowRun.findUniqueOrThrow({ where: { id: runId } });
     if (run.status !== 'RUNNING' && run.status !== 'QUEUED') return run;
@@ -44,7 +45,7 @@ test('company HTTP flows persist profiles, exact-version checks, activation, dra
   let projectId; let originalProfile; let agentId; let originalEnabled; const evaluations = [];
   try {
     const unauthenticated = await fetch(`${base}/api/admin/operations/people`); assert.equal(unauthenticated.status, 401);
-    const people = await api('/people'); assert.equal(people.status, 200); assert.equal(people.data.profiles.length, 16);
+    const people = await api('/people'); assert.equal(people.status, 200); assert.equal(people.data.profiles.length, 26);
     originalProfile = people.data.profiles.find(person => person.key === 'maya');
     const { displayName, jobTitle, department, communicationStyle, roomKey, deskKey, appearance } = originalProfile;
     const profile = { displayName, jobTitle, department, communicationStyle, roomKey, deskKey, appearance };

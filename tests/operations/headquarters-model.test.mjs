@@ -18,7 +18,7 @@ test('every company department, including Reception, maps to its own agent contr
   const { companyDepartments, departmentForRoom } = await import('../../src/lib/operations/company-catalog.ts');
   const reception = companyDepartments.find(department => department.key === 'reception');
   assert.ok(reception);
-  assert.equal(companyDepartments.length, 9);
+  assert.equal(companyDepartments.length, 17);
   assert.deepEqual(reception.agentKeys, ['receptionist']);
   assert.equal(reception.roomKey, 'reception-lobby');
   assert.equal(departmentForRoom('reception-lobby')?.key, 'reception');

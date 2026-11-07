@@ -86,7 +86,7 @@ function Room({ room, index, props, overview }: { room: CompanyRoom; index: numb
     <RoomFitout roomKey={room.key} overview={overview} />
     <Pendant at={[0, 2.75, plan.fitout === 'meeting' ? 0 : -1.35]} length={Math.min(width - 1, 3.2)} evening={props.lighting === 'evening' && !overview} />
     {staff.map(person => {
-      const station = stations[['brand-desk', 'seo-desk'].includes(person.deskKey) ? 1 : 0] ?? { x: 0, z: 0 };
+      const station = stations[staff.indexOf(person) % Math.max(stations.length, 1)] ?? { x: 0, z: 0 };
       const reception = plan.fitout === 'reception';
       const visitorReception = room.key === 'reception-lobby';
       const meeting = plan.fitout === 'meeting';

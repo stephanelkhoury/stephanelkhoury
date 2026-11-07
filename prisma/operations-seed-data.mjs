@@ -1,6 +1,8 @@
 const sharedScopes = ['COMPANY', 'OWNER_PREFERENCES', 'CLIENT', 'PROJECT', 'AGENT_INSTRUCTIONS', 'LESSONS_LEARNED'];
 const ownerCompanyScopes = ['COMPANY', 'OWNER_PREFERENCES', 'AGENT_INSTRUCTIONS'];
 
+import { studioAgentSpecs } from './studio-agents.mjs';
+
 function outputSchema(fields) {
   const properties = {
     summary: { type: 'string' },
@@ -355,6 +357,7 @@ export const starterAgents = [
     approvalRequirements: ['Owner approval before any response is sent or meeting is booked', 'Owner review of handoff when the request involves commercial commitments'],
     evaluationCriteria: ['Request type and urgency match the supplied facts', 'Handoff selects an existing internal department or clearly states uncertainty', 'Draft reply invents no identity, availability, pricing, or capability', 'Missing information is explicit and concise'],
   }),
+  ...studioAgentSpecs.map(defineAgent),
 ];
 
 export const starterAgentKnowledge = starterAgents.map((agent) => ({
@@ -497,4 +500,19 @@ starterCharacters.push(
   { key: 'lina', displayName: 'Lina', jobTitle: 'Marketing Planner', department: 'BUSINESS_OPERATIONS', roomKey: 'command-room', deskKey: 'marketing-desk', agentKey: 'marketing-planner', communicationStyle: 'Audience-aware, measurable, and realistic about outcomes.', appearance: { skinTone: '#E2B490', hairStyle: 'long-braid', hairColor: '#5A392A', clothingColor: '#88738A', accentColor: '#C3ABBF', accessory: 'tablet' } },
   { key: 'noah', displayName: 'Noah', jobTitle: 'Proposal Specialist', department: 'BUSINESS_OPERATIONS', roomKey: 'client-meeting-room', deskKey: 'proposal-desk', agentKey: 'proposal-specialist', communicationStyle: 'Clear about scope, evidence, pricing decisions, and exclusions.', appearance: { skinTone: '#BD8764', hairStyle: 'side-swept', hairColor: '#342C26', clothingColor: '#65776D', accentColor: '#B3C09D', accessory: 'notebook' } },
   { key: 'raya', displayName: 'Raya', jobTitle: 'Operations Assistant', department: 'BUSINESS_OPERATIONS', roomKey: 'operations-finance', deskKey: 'operations-desk', agentKey: 'operations-assistant', communicationStyle: 'Organized, concise, and grounded in recorded company activity.', appearance: { skinTone: '#A97452', hairStyle: 'curly-bob', hairColor: '#2E241D', clothingColor: '#7E8061', accentColor: '#C4C595', accessory: 'tablet' } },
+);
+
+// Studio team: one person per studio agent, seated in an existing room with free desks.
+const studioPerson = (key, displayName, jobTitle, department, roomKey, deskKey, agentKey, communicationStyle, appearance) => ({ key, displayName, jobTitle, department, roomKey, deskKey, agentKey, communicationStyle, appearance });
+starterCharacters.push(
+  studioPerson('rami', 'Rami', 'Creative Director', 'ADVERTISING', 'command-room', 'creative-desk', 'creative-director', 'Bold, decisive and clear about the one idea a campaign stands for.', { skinTone: '#C99673', hairStyle: 'short-wavy', hairColor: '#2E2620', clothingColor: '#3A3F8F', accentColor: '#7FC4F0', accessory: 'notebook' }),
+  studioPerson('dana', 'Dana', 'Copywriter', 'LANGUAGE_COPY', 'content-studio', 'copy-desk', 'copywriter', 'Warm, sharp and careful with every claim in English and Arabic.', { skinTone: '#E0B18D', hairStyle: 'long-braid', hairColor: '#4A2F22', clothingColor: '#8A4FA8', accentColor: '#D9B6E8', accessory: 'pencil' }),
+  studioPerson('hala', 'Hala', 'Arabic & English Translator', 'LANGUAGE_COPY', 'content-studio', 'translation-desk', 'arabic-english-translator', 'Precise about meaning, tone and right-to-left detail.', { skinTone: '#B98260', hairStyle: 'curly-bob', hairColor: '#241C17', clothingColor: '#2A6F9E', accentColor: '#9CD0EE', accessory: 'glasses' }),
+  studioPerson('tariq', 'Tariq', 'Social Media Manager', 'SOCIAL_MEDIA', 'command-room', 'social-desk', 'social-media-manager', 'Quick, platform-aware and honest about what engagement can promise.', { skinTone: '#D4A07C', hairStyle: 'short-coils', hairColor: '#231D19', clothingColor: '#A63FB0', accentColor: '#E4B5EA', accessory: 'tablet' }),
+  studioPerson('mira', 'Mira', 'Performance Marketer', 'MARKETING_PERFORMANCE', 'command-room', 'performance-desk', 'performance-marketer', 'Numbers-first, testable and realistic about outcomes.', { skinTone: '#E5B895', hairStyle: 'side-swept', hairColor: '#6A4630', clothingColor: '#1D8FE0', accentColor: '#A6D6F5', accessory: 'headset' }),
+  studioPerson('theo', 'Theo', 'Graphic Designer', 'GRAPHIC_DESIGN', 'design-studio', 'graphic-desk', 'graphic-designer', 'Exact about grids, type, colour and print detail.', { skinTone: '#C58E69', hairStyle: 'wavy-medium', hairColor: '#352A23', clothingColor: '#5A2A8C', accentColor: '#C7A6E0', accessory: 'pencil' }),
+  studioPerson('yara', 'Yara', 'Motion Designer', 'MOTION_ANIMATION', 'video-studio', 'motion-desk', 'motion-designer', 'Rhythm-minded and specific about timing and easing.', { skinTone: '#D8A883', hairStyle: 'curly-bob', hairColor: '#2B211B', clothingColor: '#1FB5E6', accentColor: '#A6E3F7', accessory: 'headphones' }),
+  studioPerson('elias', 'Elias', 'Photo Director & Retoucher', 'PHOTOGRAPHY', 'design-studio', 'photo-desk', 'photo-retoucher', 'Patient with light, styling and consistent retouching.', { skinTone: '#BF8A66', hairStyle: 'short-wavy', hairColor: '#3A2E26', clothingColor: '#2A2A8A', accentColor: '#9FA6E6', accessory: 'glasses' }),
+  studioPerson('sana', 'Sana', 'Podcast Producer', 'MEDIA_PRODUCTION', 'audio-studio', 'podcast-desk', 'podcast-producer', 'Organised, listener-minded and clear about run time and rights.', { skinTone: '#DDAE8A', hairStyle: 'long-braid', hairColor: '#3D2A20', clothingColor: '#7A32A0', accentColor: '#D8B4EC', accessory: 'headphones' }),
+  studioPerson('karim', 'Karim', 'Finance & Invoicing', 'FINANCE', 'operations-finance', 'finance-desk', 'finance-invoicing', 'Plain, exact and strict about approved prices and terms.', { skinTone: '#B88562', hairStyle: 'side-swept', hairColor: '#2A221D', clothingColor: '#3F4A5E', accentColor: '#A8B3C8', accessory: 'notebook' }),
 );

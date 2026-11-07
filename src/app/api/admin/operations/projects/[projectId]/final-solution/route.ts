@@ -35,7 +35,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       agentKey: FINAL_AGENT_KEY,
       budgetCapUsd: 1,
       idempotencyKey: `final-solution:${projectId}:${tasks.length}`,
-      handoff: { fromRunId: `final-solution:${projectId}`, summary: `Combine these finished department outputs into one final solution for the owner: what was decided, deliverables, open risks and next steps.\n${digest}` },
+      handoff: { fromRunId: `final-solution:${projectId}`, summary: `Combine these finished department outputs into ONE client-ready package for the owner with these sections: 1) strategy and goals, 2) creative direction, 3) copy (English and Arabic when relevant), 4) assets and production list, 5) schedule and owners, 6) quote and payment terms, 7) open risks and missing inputs. Use only what the outputs below support and mark gaps.\n${digest}` },
     });
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.status });
     return NextResponse.json({ run: result.run, duplicate: result.duplicate, combined: tasks.length }, { status: result.duplicate ? 200 : 201 });

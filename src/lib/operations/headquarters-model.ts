@@ -99,6 +99,16 @@ export const DESK_POSITIONS: Record<string, WorldPoint> = {
   'marketing-desk': { x: -1, z: -6.6 },
   'proposal-desk': { x: -1, z: -6.6 },
   'operations-desk': { x: -1, z: 3.4 },
+  'creative-desk': { x: -3.4, z: -6.6 },
+  'social-desk': { x: 1.4, z: -6.6 },
+  'performance-desk': { x: -1, z: -3.9 },
+  'copy-desk': { x: 9.2, z: -7.3 },
+  'translation-desk': { x: 13, z: -7.3 },
+  'graphic-desk': { x: 2.5, z: -7.3 },
+  'photo-desk': { x: 2.5, z: -4.4 },
+  'motion-desk': { x: 7, z: -2.4 },
+  'podcast-desk': { x: -9, z: 3.3 },
+  'finance-desk': { x: 1.6, z: 3.4 },
 };
 
 const PRESENCE_LABELS: Record<string, string> = {
