@@ -1,11 +1,14 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const INTERACTIVE = 'a, button, [role="button"], input, textarea, select, label, summary, [data-cursor="hover"]';
 
 export default function CustomCursor() {
+  const pathname = usePathname() ?? '';
+  const inAdmin = pathname.startsWith('/admin');
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
   const ringX = useSpring(x, { stiffness: 300, damping: 28, mass: 0.5 });
@@ -17,6 +20,7 @@ export default function CustomCursor() {
   const hoverRef = useRef(false);
 
   useEffect(() => {
+    if (inAdmin) return;
     const finePointer = window.matchMedia('(pointer: fine)');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (!finePointer.matches || reduced.matches) return;
@@ -55,7 +59,7 @@ export default function CustomCursor() {
       window.removeEventListener('mouseup', onUp);
       document.documentElement.classList.remove('has-custom-cursor');
     };
-  }, [x, y]);
+  }, [x, y, inAdmin]);
 
   return (
     <>
